@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="一封充满爱心的代码情书">
+    <title>💌 给你的代码情书</title>
+
+    <!-- 微信分享meta标签 -->
+    <meta property="og:title" content="💌 给你的代码情书">
+    <meta property="og:description" content="编译通过，运行结果：永远爱你 💕">
+    <meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/lC4pRubianpicD7GiciaibDvic8YQ/0">
+    <meta property="og:url" content="">
+    <meta property="og:type" content="website">
+
+    <!-- 微信jssdk需要 -->
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif;
+            background: linear-gradient(135deg, #ff6b6b 0%, #feca57 50%, #ff9ff3 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* 飘落爱心背景 */
+        .hearts-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .floating-heart {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 20px;
+            animation: float-up linear infinite;
+            text-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+        }
+
+        @keyframes float-up {
+            0% {
+                transform: translateY(100vh) rotate(0deg) scale(0.5);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .page {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 32px 0;
+            overflow: hidden;
+        }
+
+        .carousel-shell {
+            width: min(100%, 760px);
+            padding: 10px 0 24px;
+        }
+
+        .carousel-stage {
+            position: relative;
+            height: 590px;
+            width: 100%;
+            overflow: visible;
+        }
+
+        .carousel-slide {
+            position: absolute;
+            top: 22px;
+            left: 50%;
+            width: min(78vw, 360px);
+            min-height: 520px;
+            padding: 34px 26px 30px;
+            border: 3px solid rgba(255, 255, 255, 0.78);
+            border-radius: 26px;
+            background: rgba(255, 255, 255, 0.94);
+            box-shadow: 0 28px 80px rgba(0, 0, 0, 0.28);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 22px;
+            opacity: 0;
+            transform: translateX(-50%) scale(0.72);
+            transition: transform 0.48s ease, opacity 0.48s ease, filter 0.48s ease;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .carousel-slide::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, rgba(255,255,255,0.78), rgba(255,255,255,0.08), rgba(255,255,255,0.78));
+            opacity: 0;
+            transition: opacity 0.48s ease;
+            pointer-events: none;
+        }
+
+        .carousel-slide.active {
+            z-index: 3;
+            opacity: 1;
+            filter: none;
+            transform: translateX(-50%) scale(1);
+            pointer-events: auto;
+        }
+
+        .carousel-slide.prev {
+            z-index: 2;
+            opacity: 0.56;
+            filter: saturate(0.85) blur(0.2px);
+            transform: translateX(-118%) scale(0.82);
+        }
+
+        .carousel-slide.next {
+            z-index: 2;
+            opacity: 0.56;
+            filter: saturate(0.85) blur(0.2px);
+            transform: translateX(18%) scale(0.82);
+        }
+
+        .carousel-slide.prev::after,
+        .carousel-slide.next::after {
+            opacity: 1;
+        }
+
+        .carousel-slide.hidden {
+            z-index: 1;
+            opacity: 0;
+            transform: translateX(-50%) scale(0.7);
+        }
+
+        .slide-kicker {
+            text-align: center;
+            color: #ee5a6f;
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 0;
+        }
+
+        .big-heart {
+            display: block;
+            text-align: center;
+            font-size: 56px;
+            animation: heartbeat 1.5s infinite;
+        }
+
+        .letter-title {
+            text-align: center;
+            color: #ff6b6b;
+            font-size: 30px;
+            font-weight: 900;
+            line-height: 1.25;
+        }
+
+        .letter-text {
+            color: #555;
+            font-size: 17px;
+            font-weight: 600;
+            line-height: 2;
+            text-align: center;
+        }
+
+        .letter-text strong {
+            color: #ee5a6f;
+            font-weight: 900;
+        }
+
+        .heart-divider {
+            text-align: center;
+            font-size: 24px;
+            color: #ff6b6b;
+            letter-spacing: 10px;
+        }
+
+        .signature {
+            text-align: center;
+            color: #ff6b6b;
+            font-size: 16px;
+            font-weight: 800;
+            line-height: 1.9;
+        }
+
+        .carousel-controls {
+            display: grid;
+            grid-template-columns: 46px 1fr 46px;
+            align-items: center;
+            gap: 16px;
+            width: min(360px, calc(100% - 48px));
+            margin: 0 auto;
+        }
+
+        .carousel-button {
+            width: 46px;
+            height: 46px;
+            border: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.88);
+            color: #ee5a6f;
+            font-size: 28px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(238, 90, 111, 0.32);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .carousel-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 28px rgba(238, 90, 111, 0.46);
+        }
+
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .carousel-dot {
+            width: 9px;
+            height: 9px;
+            border: 0;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.62);
+            cursor: pointer;
+            transition: width 0.2s ease, background 0.2s ease;
+        }
+
+        .carousel-dot.active {
+            width: 28px;
+            background: white;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 22px;
+            border: none;
+            border-radius: 25px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 800;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+        }
+
+        .love-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 99;
+            display: none;
+        }
+
+        .love-rain.active {
+            display: block;
+        }
+
+        .rain-heart {
+            position: absolute;
+            font-size: 24px;
+            animation: rain-fall linear forwards;
+        }
+
+        @keyframes rain-fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page {
+                align-items: flex-start;
+                padding: 16px 0 max(16px, env(safe-area-inset-bottom));
+            }
+
+            .carousel-stage {
+                height: 540px;
+            }
+
+            .carousel-slide {
+                width: min(84vw, 320px);
+                min-height: 485px;
+                top: 14px;
+                padding: 26px 20px 22px;
+                gap: 16px;
+                border-radius: 22px;
+            }
+
+            .carousel-slide.prev {
+                transform: translateX(-104%) scale(0.78);
+            }
+
+            .carousel-slide.next {
+                transform: translateX(4%) scale(0.78);
+            }
+
+            .big-heart {
+                font-size: 48px;
+            }
+
+            .letter-title {
+                font-size: 25px;
+            }
+
+            .letter-text {
+                font-size: 15px;
+                line-height: 1.9;
+            }
+
+            .heart-divider {
+                font-size: 20px;
+                letter-spacing: 6px;
+            }
+
+            .carousel-controls {
+                grid-template-columns: 42px 1fr 42px;
+                gap: 12px;
+                width: min(320px, calc(100% - 34px));
+            }
+
+            .carousel-button {
+                width: 42px;
+                height: 42px;
+                font-size: 25px;
+            }
+        }
+
+        @media (max-width: 390px) {
+            .carousel-stage {
+                height: 510px;
+            }
+
+            .carousel-slide {
+                width: min(84vw, 320px);
+                min-height: 460px;
+                padding: 24px 18px 20px;
+                gap: 14px;
+            }
+
+            .carousel-slide.prev {
+                transform: translateX(-101%) scale(0.76);
+            }
+
+            .carousel-slide.next {
+                transform: translateX(1%) scale(0.76);
+            }
+
+            .big-heart {
+                font-size: 42px;
+            }
+
+            .letter-title {
+                font-size: 23px;
+            }
+
+            .letter-text,
+            .signature {
+                font-size: 14px;
+                line-height: 1.82;
+            }
+
+            .slide-kicker {
+                font-size: 12px;
+            }
+
+            .btn {
+                padding: 10px 18px;
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .page {
+                padding-top: 12px;
+            }
+
+            .carousel-stage {
+                height: 480px;
+            }
+
+            .carousel-slide {
+                width: min(84vw, 320px);
+                min-height: 430px;
+                padding: 22px 16px 18px;
+                gap: 12px;
+                border-width: 2px;
+            }
+
+            .carousel-slide.prev {
+                transform: translateX(-98%) scale(0.74);
+            }
+
+            .carousel-slide.next {
+                transform: translateX(-2%) scale(0.74);
+            }
+
+            .big-heart {
+                font-size: 38px;
+            }
+
+            .letter-title {
+                font-size: 22px;
+            }
+
+            .letter-text,
+            .signature {
+                font-size: 13px;
+                line-height: 1.78;
+            }
+
+            .carousel-controls {
+                grid-template-columns: 38px 1fr 38px;
+                width: min(300px, calc(100% - 28px));
+            }
+
+            .carousel-button {
+                width: 38px;
+                height: 38px;
+                font-size: 23px;
+            }
+
+            .carousel-dot.active {
+                width: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 飘落爱心背景 -->
+    <div class="hearts-container" id="heartsContainer"></div>
+
+    <!-- 爱心雨特效 -->
+    <div class="love-rain" id="loveRain"></div>
+
+    <main class="page">
+        <section class="carousel-shell" aria-label="给你的代码情书轮播">
+            <div class="carousel-stage" id="carouselStage">
+                <article class="carousel-slide active">
+                    <span class="big-heart">💖</span>
+                    <p class="slide-kicker">LOVE LETTER / 01</p>
+                    <h1 class="letter-title">给你的代码情书</h1>
+                    <p class="letter-text">
+                        编译通过，运行结果：<strong>永远爱你</strong>。<br>
+                        每一次心跳，都是我写给你的循环。<br>
+                        页面向前滑动，心意也一点点靠近你。
+                    </p>
+                    <div class="heart-divider">💗 💗 💗</div>
+                </article>
+
+                <article class="carousel-slide next">
+                    <p class="slide-kicker">LOVE LETTER / 02</p>
+                    <h2 class="letter-title">唯一常量</h2>
+                    <p class="letter-text">
+                        你是我的唯一常量，<br>
+                        不可重新赋值，<br>
+                        不可被删除，<br>
+                        也不会被时间回收。
+                    </p>
+                </article>
+
+                <article class="carousel-slide hidden">
+                    <p class="slide-kicker">LOVE LETTER / 03</p>
+                    <h2 class="letter-title">主循环里都是你</h2>
+                    <p class="letter-text">
+                        在遇见你之前，世界只是空白页面。<br>
+                        遇见你之后，每一个普通瞬间，<br>
+                        都像被温柔点亮。<br>
+                        我的爱在时间里增长，越运行越坚定。
+                    </p>
+                </article>
+
+                <article class="carousel-slide prev">
+                    <p class="slide-kicker">LOVE LETTER / 04</p>
+                    <h2 class="letter-title">永不释放</h2>
+                    <p class="letter-text">
+                        你是我的语法糖，<br>
+                        让生活不再苦涩。<br>
+                        你是我的异常处理，<br>
+                        捕获我所有脆弱。
+                    </p>
+                    <p class="signature">
+                        这段爱没有终止条件<br>
+                        —— 永远爱你的程序员 💻❤️
+                    </p>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="startLoveRain()">💕 爱心雨</button>
+                    </div>
+                </article>
+            </div>
+
+            <div class="carousel-controls" aria-label="轮播控制">
+                <button class="carousel-button" type="button" onclick="prevSlide()" aria-label="上一页">‹</button>
+                <div class="carousel-dots" id="carouselDots">
+                    <button class="carousel-dot active" type="button" onclick="goToSlide(0)" aria-label="第1页"></button>
+                    <button class="carousel-dot" type="button" onclick="goToSlide(1)" aria-label="第2页"></button>
+                    <button class="carousel-dot" type="button" onclick="goToSlide(2)" aria-label="第3页"></button>
+                    <button class="carousel-dot" type="button" onclick="goToSlide(3)" aria-label="第4页"></button>
+                </div>
+                <button class="carousel-button" type="button" onclick="nextSlide()" aria-label="下一页">›</button>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const carouselSlides = Array.from(document.querySelectorAll('.carousel-slide'));
+        const carouselDots = Array.from(document.querySelectorAll('.carousel-dot'));
+        let currentSlide = 0;
+
+        function updateCarousel() {
+            const lastIndex = carouselSlides.length - 1;
+            const prevIndex = currentSlide === 0 ? lastIndex : currentSlide - 1;
+            const nextIndex = currentSlide === lastIndex ? 0 : currentSlide + 1;
+
+            carouselSlides.forEach((slide, index) => {
+                slide.classList.remove('active', 'prev', 'next', 'hidden');
+
+                if (index === currentSlide) {
+                    slide.classList.add('active');
+                } else if (index === prevIndex) {
+                    slide.classList.add('prev');
+                } else if (index === nextIndex) {
+                    slide.classList.add('next');
+                } else {
+                    slide.classList.add('hidden');
+                }
+            });
+
+            carouselDots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+        }
+
+        function goToSlide(index) {
+            currentSlide = (index + carouselSlides.length) % carouselSlides.length;
+            updateCarousel();
+        }
+
+        function nextSlide() {
+            goToSlide(currentSlide + 1);
+        }
+
+        function prevSlide() {
+            goToSlide(currentSlide - 1);
+        }
+
+        // 创建飘落爱心
+        function createFloatingHearts() {
+            const container = document.getElementById('heartsContainer');
+            const hearts = ['💕', '💖', '💗', '💓', '💝', '💘', '💞'];
+
+            for (let i = 0; i < 25; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'floating-heart';
+                heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDuration = (10 + Math.random() * 10) + 's';
+                heart.style.animationDelay = Math.random() * 10 + 's';
+                heart.style.fontSize = (15 + Math.random() * 20) + 'px';
+                container.appendChild(heart);
+            }
+        }
+
+        // 爱心雨特效
+        function startLoveRain() {
+            const rain = document.getElementById('loveRain');
+            rain.classList.add('active');
+            const hearts = ['💕', '💖', '💗', '💓', '💝', '💘', '💞', '💟'];
+
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'rain-heart';
+                    heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                    heart.style.left = Math.random() * 100 + '%';
+                    heart.style.top = '-50px';
+                    heart.style.animationDuration = (2 + Math.random() * 2) + 's';
+                    heart.style.fontSize = (20 + Math.random() * 15) + 'px';
+                    rain.appendChild(heart);
+
+                    setTimeout(() => heart.remove(), 4000);
+                }, i * 50);
+            }
+
+            setTimeout(() => {
+                rain.classList.remove('active');
+            }, 5000);
+        }
+
+        window.onload = function() {
+            createFloatingHearts();
+            updateCarousel();
+        };
+    </script>
+</body>
+</html>
