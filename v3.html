@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="一屏装满信封的代码情书">
+    <title>💌 宝贝信封雨</title>
+
+    <!-- 微信分享meta标签 -->
+    <meta property="og:title" content="💌 宝贝信封雨">
+    <meta property="og:description" content="每一封信都写着想你和爱你 💕">
+    <meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/lC4pRubianpicD7GiciaibDvic8YQ/0">
+    <meta property="og:url" content="">
+    <meta property="og:type" content="website">
+
+    <!-- 微信jssdk需要 -->
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif;
+            background: linear-gradient(135deg, #ff6b6b 0%, #feca57 50%, #ff9ff3 100%);
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* 飘落爱心背景 */
+        .hearts-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .floating-heart {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 20px;
+            animation: float-up linear infinite;
+            text-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+        }
+
+        @keyframes float-up {
+            0% {
+                transform: translateY(100vh) rotate(0deg) scale(0.5);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        .page {
+            position: relative;
+            z-index: 2;
+            width: min(100%, 960px);
+            margin: 0 auto;
+            padding: 56px 18px 52px;
+            pointer-events: none;
+        }
+
+        .page-title {
+            margin: 0 auto;
+            max-width: 520px;
+            text-align: center;
+            color: white;
+            text-shadow: 0 4px 18px rgba(238, 90, 111, 0.42);
+        }
+
+        .page-title h1 {
+            font-size: 30px;
+            line-height: 1.25;
+            font-weight: 900;
+        }
+
+        .page-title p {
+            margin-top: 10px;
+            font-size: 14px;
+            line-height: 1.8;
+            font-weight: 700;
+        }
+
+        .envelope-rain {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .envelope-card {
+            position: absolute;
+            top: -180px;
+            left: 0;
+            width: var(--envelope-width);
+            min-height: var(--envelope-height);
+            padding: 18px 16px 16px;
+            border: 2px solid rgba(255, 255, 255, 0.72);
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.92);
+            box-shadow: 0 16px 46px rgba(238, 90, 111, 0.28);
+            color: #ee5a6f;
+            overflow: hidden;
+            animation: envelope-fall var(--fall-duration) linear var(--fall-delay) forwards;
+            transform: translateY(-180px) rotate(var(--fall-rotate));
+        }
+
+        .envelope-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 48px;
+            background: linear-gradient(145deg, rgba(255,255,255,0.96), rgba(255,224,224,0.92));
+            clip-path: polygon(0 0, 50% 100%, 100% 0);
+            opacity: 0.86;
+        }
+
+        .envelope-card::after {
+            content: '💌';
+            position: absolute;
+            top: 12px;
+            right: 14px;
+            font-size: 20px;
+            opacity: 0.56;
+        }
+
+        .envelope-message {
+            position: relative;
+            z-index: 1;
+            padding-top: 38px;
+            min-height: calc(var(--envelope-height) - 36px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: var(--message-size);
+            font-weight: 900;
+            line-height: 1.72;
+        }
+
+        @keyframes envelope-fall {
+            0% {
+                transform: translateY(-180px) rotate(var(--fall-rotate));
+                opacity: 0;
+            }
+            8% {
+                opacity: 1;
+            }
+            88% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(calc(100vh + 180px)) rotate(calc(var(--fall-rotate) * -1));
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page {
+                padding: 52px 14px 44px;
+            }
+
+            .page-title h1 {
+                font-size: 25px;
+            }
+
+            .page-title p {
+                font-size: 13px;
+                line-height: 1.7;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .page {
+                padding: 50px 12px 38px;
+            }
+
+            .page-title h1 {
+                font-size: 22px;
+            }
+
+            .page-title p {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 飘落爱心背景 -->
+    <div class="hearts-container" id="heartsContainer"></div>
+
+    <main class="page">
+        <header class="page-title">
+            <h1>宝贝信封雨</h1>
+            <p>每一封信都从天上落下来，写着我想你。</p>
+        </header>
+    </main>
+
+    <section class="envelope-rain" id="envelopeRain" aria-label="从上向下滚动的信封雨"></section>
+
+    <script>
+        const ENVELOPE_MESSAGES = [
+            '宝贝你好',
+            '宝贝爱你',
+            '宝贝想你',
+            '宝贝抱抱',
+            '宝贝亲亲',
+            '宝贝今天也要开心',
+            '宝贝你最可爱',
+            '宝贝我一直都在',
+            '宝贝晚安好梦',
+            '宝贝早安呀',
+            '宝贝你是我的唯一',
+            '宝贝永远爱你'
+        ];
+
+        const envelopeRain = document.getElementById('envelopeRain');
+        const ENVELOPE_WIDTH_MIN = 82;
+        const ENVELOPE_WIDTH_MAX = 150;
+        const ENVELOPE_HEIGHT_MIN = 68;
+        const ENVELOPE_HEIGHT_MAX = 126;
+        const MESSAGE_SIZE_MIN = 11;
+        const MESSAGE_SIZE_MAX = 16;
+        const FALL_DURATION_MIN = 6500;
+        const FALL_DURATION_MAX = 13500;
+        const MAX_SPAWN_DELAY = 4200;
+        const ACTIVE_ENVELOPE_COUNT = 12;
+        let envelopeIndex = 0;
+
+        function randomBetween(min, max) {
+            return min + Math.random() * (max - min);
+        }
+
+        function createEnvelopeRainDrop() {
+            const card = document.createElement('article');
+            const messageNode = document.createElement('div');
+            const width = randomBetween(ENVELOPE_WIDTH_MIN, ENVELOPE_WIDTH_MAX);
+            const height = randomBetween(ENVELOPE_HEIGHT_MIN, ENVELOPE_HEIGHT_MAX);
+            const widthPercent = Math.min(42, (width / window.innerWidth) * 100);
+            const left = Math.random() * (100 - widthPercent);
+            const duration = randomBetween(FALL_DURATION_MIN, FALL_DURATION_MAX);
+            const delay = randomBetween(0, MAX_SPAWN_DELAY);
+            const fontSize = randomBetween(MESSAGE_SIZE_MIN, MESSAGE_SIZE_MAX);
+            const rotate = randomBetween(-7, 7);
+            const message = ENVELOPE_MESSAGES[envelopeIndex % ENVELOPE_MESSAGES.length];
+
+            envelopeIndex += 1;
+            card.className = 'envelope-card';
+            card.style.left = `${left}%`;
+            card.style.setProperty('--envelope-width', `${width}px`);
+            card.style.setProperty('--envelope-height', `${height}px`);
+            card.style.setProperty('--message-size', `${fontSize}px`);
+            card.style.setProperty('--fall-duration', `${duration}ms`);
+            card.style.setProperty('--fall-delay', `${delay}ms`);
+            card.style.setProperty('--fall-rotate', `${rotate}deg`);
+            messageNode.className = 'envelope-message';
+            messageNode.textContent = message;
+            card.appendChild(messageNode);
+            card.addEventListener('animationend', () => {
+                card.remove();
+                spawnEnvelopeRain(1);
+            });
+
+            return card;
+        }
+
+        function spawnEnvelopeRain(count = ACTIVE_ENVELOPE_COUNT) {
+            const fragment = document.createDocumentFragment();
+
+            for (let i = 0; i < count; i++) {
+                fragment.appendChild(createEnvelopeRainDrop());
+            }
+
+            envelopeRain.appendChild(fragment);
+        }
+
+        // 创建飘落爱心
+        function createFloatingHearts() {
+            const container = document.getElementById('heartsContainer');
+            const hearts = ['💕', '💖', '💗', '💓', '💝', '💘', '💞'];
+
+            for (let i = 0; i < 25; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'floating-heart';
+                heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDuration = (10 + Math.random() * 10) + 's';
+                heart.style.animationDelay = Math.random() * 10 + 's';
+                heart.style.fontSize = (15 + Math.random() * 20) + 'px';
+                container.appendChild(heart);
+            }
+        }
+
+        window.onload = function() {
+            createFloatingHearts();
+            spawnEnvelopeRain();
+        };
+    </script>
+</body>
+</html>

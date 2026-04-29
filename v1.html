@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="description" content="一封充满爱心的代码情书">
-    <title>💌 给你的代码情书</title>
-    
+    <meta name="description" content="一封充满想念的情书">
+    <title>💌 给你的情书</title>
+
     <!-- 微信分享meta标签 -->
-    <meta property="og:title" content="💌 给你的代码情书">
-    <meta property="og:description" content="编译通过，运行结果：永远爱你 💕">
+    <meta property="og:title" content="💌 给你的情书">
+    <meta property="og:description" content="每一句都是想你，每一页都是爱你 💕">
     <meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/lC4pRubianpicD7GiciaibDvic8YQ/0">
     <meta property="og:url" content="">
     <meta property="og:type" content="website">
-    
+
     <!-- 微信jssdk需要 -->
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -65,7 +65,6 @@
             }
         }
 
-        /* 主容器 */
         .container {
             position: relative;
             z-index: 1;
@@ -78,7 +77,6 @@
             justify-content: center;
         }
 
-        /* 信封样式 */
         .envelope-wrapper {
             perspective: 1000px;
             margin-bottom: 30px;
@@ -159,7 +157,6 @@
             50% { transform: translateX(-50%) translateY(-8px); }
         }
 
-        /* 信纸 */
         .letter {
             position: fixed;
             top: 50%;
@@ -188,8 +185,8 @@
 
         .letter-header {
             text-align: center;
-            margin-bottom: 25px;
-            padding-bottom: 20px;
+            margin-bottom: 22px;
+            padding-bottom: 18px;
             border-bottom: 3px dashed #ffe0e0;
         }
 
@@ -201,107 +198,66 @@
         }
 
         .letter-title {
-            font-size: 22px;
+            font-size: 23px;
             color: #ff6b6b;
-            font-weight: 700;
-            margin-bottom: 5px;
+            font-weight: 800;
+            margin-bottom: 6px;
         }
 
         .letter-subtitle {
             font-size: 13px;
             color: #999;
+            line-height: 1.7;
         }
 
-        /* 诗歌卡片 */
-        .poem-card {
+        .sentence-list {
+            display: grid;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .sentence-card {
+            position: relative;
+            padding: 16px 18px;
+            border-radius: 18px;
             background: linear-gradient(135deg, #fff5f5 0%, #ffe0e0 100%);
-            border-radius: 16px;
-            padding: 20px;
-            margin: 20px 0;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            border: 2px solid rgba(255, 107, 107, 0.2);
-        }
-
-        .poem-card::before {
-            content: '💕';
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 20px;
-            opacity: 0.3;
-        }
-
-        .poem-card::after {
-            content: '💕';
-            position: absolute;
-            bottom: 10px;
-            left: 10px;
-            font-size: 20px;
-            opacity: 0.3;
-        }
-
-        .poem-text {
+            border: 2px solid rgba(255, 107, 107, 0.18);
             color: #555;
-            line-height: 2;
             font-size: 15px;
-            font-weight: 500;
+            font-weight: 700;
+            line-height: 1.9;
+            text-align: center;
+            overflow: hidden;
         }
 
-        /* 代码块 */
-        .code-block {
-            background: #2d132c;
-            border-radius: 16px;
-            padding: 20px;
-            margin: 20px 0;
-            font-family: 'Consolas', 'Monaco', monospace;
-            font-size: 12px;
-            line-height: 1.8;
-            color: #eee;
-            overflow-x: auto;
-            position: relative;
-            box-shadow: inset 0 2px 10px rgba(0,0,0,0.5), 0 5px 20px rgba(0,0,0,0.2);
-            border: 1px solid #ff6b6b;
+        .sentence-card::before {
+            content: '💕';
+            position: absolute;
+            top: 8px;
+            right: 10px;
+            opacity: 0.28;
         }
 
-        .code-header {
-            display: flex;
-            gap: 6px;
-            margin-bottom: 15px;
+        .sentence-card::after {
+            content: '💕';
+            position: absolute;
+            bottom: 8px;
+            left: 10px;
+            opacity: 0.22;
         }
 
-        .dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-        }
-        .dot.red { background: #ff5f56; }
-        .dot.yellow { background: #ffbd2e; }
-        .dot.green { background: #27c93f; }
-
-        .keyword { color: #ff79c6; }
-        .function { color: #f1fa8c; }
-        .string { color: #f1fa8c; }
-        .comment { color: #6272a4; font-style: italic; }
-        .variable { color: #8be9fd; }
-        .number { color: #bd93f9; }
-        .operator { color: #ff79c6; }
-
-        /* 爱心分隔线 */
         .heart-divider {
             text-align: center;
             font-size: 24px;
-            margin: 25px 0;
+            margin: 22px 0;
             color: #ff6b6b;
             letter-spacing: 10px;
         }
 
-        /* 底部 */
         .letter-footer {
             text-align: center;
-            margin-top: 30px;
-            padding-top: 25px;
+            margin-top: 28px;
+            padding-top: 22px;
             border-top: 3px dashed #ffe0e0;
         }
 
@@ -315,7 +271,7 @@
         .signature {
             font-size: 16px;
             color: #ff6b6b;
-            font-weight: 700;
+            font-weight: 800;
             margin-bottom: 20px;
         }
 
@@ -332,7 +288,7 @@
             font-size: 14px;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-weight: 600;
+            font-weight: 700;
         }
 
         .btn-primary {
@@ -356,7 +312,6 @@
             background: #fff5f5;
         }
 
-        /* 关闭按钮 */
         .close-btn {
             position: absolute;
             top: 15px;
@@ -381,16 +336,14 @@
             transform: rotate(90deg);
         }
 
-        /* 响应式 */
         @media (max-width: 480px) {
             .container { padding: 30px 15px; }
             .envelope { height: 180px; }
             .letter { padding: 25px 20px; width: 95%; }
-            .code-block { font-size: 11px; padding: 15px; }
-            .letter-title { font-size: 20px; }
+            .letter-title { font-size: 21px; }
+            .sentence-card { padding: 14px 16px; font-size: 14px; }
         }
 
-        /* 爱心雨特效 */
         .love-rain {
             position: fixed;
             top: 0;
@@ -398,7 +351,7 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 99;
+            z-index: 9999;
             display: none;
         }
 
@@ -420,14 +373,10 @@
     </style>
 </head>
 <body>
-    <!-- 飘落爱心背景 -->
     <div class="hearts-container" id="heartsContainer"></div>
-
-    <!-- 爱心雨特效 -->
     <div class="love-rain" id="loveRain"></div>
 
     <div class="container">
-        <!-- 信封 -->
         <div class="envelope-wrapper">
             <div class="envelope" id="envelope" onclick="openLetter()">
                 <div class="envelope-flap"></div>
@@ -437,84 +386,34 @@
         </div>
     </div>
 
-    <!-- 信纸内容 -->
     <div class="letter" id="letter">
         <button class="close-btn" onclick="closeLetter()">×</button>
 
         <div class="letter-header">
             <div class="big-heart">💖</div>
-            <div class="letter-title">给你的代码情书</div>
-            <div class="letter-subtitle">编译通过，运行结果：永远爱你</div>
+            <div class="letter-title">给你的情书</div>
+            <div class="letter-subtitle">每一句都是想你，每一页都是爱你</div>
         </div>
 
-        <div class="poem-card">
-            <div class="poem-text">
-                你是我的唯一常量<br>
-                不可重新赋值<br>
-                不可被垃圾回收
-            </div>
-        </div>
-
-        <div class="code-block">
-            <div class="code-header">
-                <div class="dot red"></div>
-                <div class="dot yellow"></div>
-                <div class="dot green"></div>
-            </div>
-            <div class="code-content">
-<span class="keyword">while</span> <span class="variable">True</span>:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># 初始化我的世界</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">world</span> <span class="operator">=</span> <span class="function">create_world</span>()<br><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># 直到遇见你，我才明白</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># 什么是真正的"不可变对象"</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">you</span> <span class="operator">=</span> <span class="function">Person</span>(<span class="string">name="你"</span>)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">my_heart</span> <span class="operator">=</span> <span class="function">Heart</span>(<span class="variable">state</span><span class="operator">=</span><span class="string">"empty"</span>)<br><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># 第一次相遇</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span> <span class="variable">you</span> <span class="keyword">in</span> <span class="variable">world</span>:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">my_heart</span>.<span class="variable">state</span> <span class="operator">=</span> <span class="string">"fluttering"</span><br><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># 爱呈指数增长</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">for</span> <span class="variable">moment</span> <span class="keyword">in</span> <span class="variable">timeline</span>:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">my_love</span> <span class="operator">+=</span> <span class="number">2</span> <span class="operator">**</span> <span class="variable">moment</span><br><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># 我的承诺没有死锁</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">with</span> <span class="function">Commitment</span>() <span class="keyword">as</span> <span class="variable">forever</span>:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">forever</span>.<span class="function">lock</span>(<span class="variable">you</span>)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># 永不释放 💕</span><br><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">except</span> <span class="variable">BreakUp</span>:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># 这个异常永远不会被抛出</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">pass</span><br><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">finally</span>:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># 即使世界崩溃</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># 你仍在我的内存最深处</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">gc</span>.<span class="function">disable</span>()<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="function">keep</span>(<span class="variable">you</span>, <span class="variable">in</span><span class="operator">=</span><span class="string">"soul"</span>)
-            </div>
+        <div class="sentence-list">
+            <div class="sentence-card">宝贝我想你，想把今天遇见的所有温柔都讲给你听。</div>
+            <div class="sentence-card">今天也很爱你，比昨天多一点，比明天少一点。</div>
+            <div class="sentence-card">想把所有温柔都给你，连风路过的时候也替我抱抱你。</div>
+            <div class="sentence-card">你不在身边的时候，我的心会偷偷跑去找你。</div>
+            <div class="sentence-card">每次想到你，普通的一天都会变得亮晶晶。</div>
+            <div class="sentence-card">我喜欢你笑起来的样子，也喜欢你什么都不说时的可爱。</div>
+            <div class="sentence-card">想和你一起吃饭、散步、看云，把慢慢的日子过成甜甜的歌。</div>
+            <div class="sentence-card">宝贝，愿你醒来有好心情，睡前有我的想念陪着你。</div>
         </div>
 
         <div class="heart-divider">💗 💗 💗</div>
 
-        <div class="poem-card">
-            <div class="poem-text">
-                你是我的语法糖 💝<br>
-                让我的生活不再苦涩<br>
-                你是我的异常处理<br>
-                捕获我所有的脆弱 💕
-            </div>
-        </div>
-
-        <div class="code-block" style="background: #fff5f5; border: 2px solid #ff6b6b;">
-            <div class="code-content" style="color: #333;">
-                <span style="color: #e83e8c; font-weight: bold;">const</span> <span style="color: #ff6b6b; font-weight: bold;">YOU</span> = <span style="color: #c7254e;">"唯一"</span>;<br>
-                <span style="color: #999;">// 不可重新赋值，不可删除 💖</span><br><br>
-                <span style="color: #e83e8c;">await</span> <span style="color: #ff6b6b;">love</span>.<span style="color: #333;">forever</span>(<span style="color: #ff6b6b;">YOU</span>);
-            </div>
-        </div>
-
         <div class="letter-footer">
             <div class="footer-text">
-                这段代码没有bug<br>
-                就像我对你的爱没有条件 💞
+                这封信没有复杂的话<br>
+                只有一句一句认真想你 💞
             </div>
-            <div class="signature">—— 永远爱你的程序员 💻❤️</div>
+            <div class="signature">—— 永远爱你的人 💌</div>
             <div class="btn-group">
                 <button class="btn btn-primary" onclick="startLoveRain()">💕 爱心雨</button>
                 <button class="btn btn-secondary" onclick="share()">💌 分享给Ta</button>
@@ -523,7 +422,6 @@
     </div>
 
     <script>
-        // 创建飘落爱心
         function createFloatingHearts() {
             const container = document.getElementById('heartsContainer');
             const hearts = ['💕', '💖', '💗', '💓', '💝', '💘', '💞'];
@@ -540,7 +438,6 @@
             }
         }
 
-        // 爱心雨特效
         function startLoveRain() {
             const rain = document.getElementById('loveRain');
             rain.classList.add('active');
@@ -566,7 +463,6 @@
             }, 5000);
         }
 
-        // 打开信封
         function openLetter() {
             const envelope = document.getElementById('envelope');
             const letter = document.getElementById('letter');
@@ -579,7 +475,6 @@
             }, 400);
         }
 
-        // 关闭信纸
         function closeLetter() {
             const envelope = document.getElementById('envelope');
             const letter = document.getElementById('letter');
@@ -591,12 +486,11 @@
             }, 300);
         }
 
-        // 分享
         function share() {
             if (navigator.share) {
                 navigator.share({
-                    title: '💌 给你的代码情书',
-                    text: '这是一封充满爱心的代码情书，请查收～',
+                    title: '💌 给你的情书',
+                    text: '这是一封写满想念的情书，请查收～',
                     url: window.location.href
                 });
             } else {
@@ -604,12 +498,10 @@
             }
         }
 
-        // 初始化
         window.onload = function() {
             createFloatingHearts();
         };
 
-        // 点击外部关闭
         document.getElementById('letter').addEventListener('click', function(e) {
             if (e.target === this) {
                 closeLetter();
