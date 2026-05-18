@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="description" content="母亲节快乐，给妈妈的一组手绘贴纸祝福">
+    <meta name="description" content="母亲节快乐，给妈妈的一封手写家书">
     <title>母亲节快乐</title>
 
     <meta property="og:title" content="母亲节快乐">
-    <meta property="og:description" content="点击标题，收下一段给妈妈的话">
+    <meta property="og:description" content="展开一封写给妈妈的家书">
     <meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/lC4pRubianpicD7GiciaibDvic8YQ/0">
     <meta property="og:url" content="">
     <meta property="og:type" content="website">
@@ -31,8 +31,12 @@
             min-height: 100vh;
             min-height: 100dvh;
             overflow: hidden;
-            background: #fff7fb;
-            color: #302027;
+            background:
+                linear-gradient(90deg, rgba(180, 132, 88, 0.08) 1px, transparent 1px),
+                linear-gradient(180deg, rgba(180, 132, 88, 0.08) 1px, transparent 1px),
+                #f7eee2;
+            background-size: 36px 36px;
+            color: #3f2c2a;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", sans-serif;
         }
 
@@ -45,497 +49,443 @@
             min-height: min(680px, 100dvh);
             overflow: hidden;
             background:
-                radial-gradient(circle at 18% 11%, rgba(255, 197, 218, 0.32), transparent 24%),
-                radial-gradient(circle at 84% 88%, rgba(255, 226, 149, 0.24), transparent 24%),
-                linear-gradient(180deg, #fffefe 0%, #fff9fc 60%, #fff0f6 100%);
+                radial-gradient(circle at 18% 12%, rgba(255, 193, 186, 0.32), transparent 28%),
+                radial-gradient(circle at 88% 86%, rgba(224, 180, 120, 0.28), transparent 28%),
+                linear-gradient(180deg, #fffaf3 0%, #f8ebdd 58%, #f0ddca 100%);
+            box-shadow: 0 0 52px rgba(110, 68, 43, 0.12);
+        }
+
+        .stage::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(118deg, transparent 0 42%, rgba(133, 85, 48, 0.06) 43% 44%, transparent 45%),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.36), transparent 32%);
+            pointer-events: none;
         }
 
         .theme-title {
             position: absolute;
             left: 50%;
-            top: max(30px, env(safe-area-inset-top));
+            top: max(28px, env(safe-area-inset-top));
             z-index: 20;
-            width: min(326px, calc(100% - 54px));
-            min-height: 142px;
-            padding: 20px 18px 16px;
-            border: 6px solid #21171d;
-            border-radius: 44px;
-            background: #ffbdd4;
-            color: #ffe8f1;
-            box-shadow: 0 0 0 9px #f078a2, 0 9px 0 #e96f9b, 0 18px 30px rgba(202, 85, 124, 0.16);
+            width: min(330px, calc(100% - 52px));
+            padding: 17px 18px 15px;
+            border: 2px solid rgba(117, 70, 54, 0.34);
+            border-radius: 18px;
+            background: rgba(255, 249, 240, 0.84);
+            color: #b85055;
+            box-shadow: 0 12px 0 rgba(185, 116, 86, 0.12), 0 20px 42px rgba(111, 74, 52, 0.14);
             cursor: pointer;
             text-align: center;
-            text-shadow: 4px 4px 0 #21171d, -3px 3px 0 #21171d, 3px -3px 0 #21171d, -3px -3px 0 #21171d;
-            transform: translateX(-50%) rotate(-1deg);
+            transform: translateX(-50%) rotate(-1.2deg);
             user-select: none;
-            font-size: clamp(42px, 11.8vw, 64px);
-            font-weight: 1000;
-            line-height: 1;
+            font-family: "Bradley Hand", "Comic Sans MS", "PingFang SC", cursive;
+            font-size: clamp(34px, 9.8vw, 50px);
+            font-weight: 900;
+            line-height: 1.04;
             letter-spacing: 0;
         }
 
         .theme-title:focus-visible {
-            outline: 4px solid rgba(255, 244, 91, 0.86);
-            outline-offset: 14px;
+            outline: 4px solid rgba(203, 111, 91, 0.42);
+            outline-offset: 8px;
+        }
+
+        .theme-title::before,
+        .theme-title::after {
+            content: "";
+            position: absolute;
+            border-radius: 999px;
+            background: rgba(218, 114, 111, 0.78);
         }
 
         .theme-title::before {
-            content: "";
-            position: absolute;
-            inset: -14px;
-            z-index: -1;
-            border-radius: 54px;
-            background: #f078a2;
+            left: 18px;
+            top: 16px;
+            width: 9px;
+            height: 9px;
+            box-shadow: 274px 48px 0 rgba(218, 114, 111, 0.52);
         }
 
-        .title-bubble {
-            position: relative;
-            z-index: 3;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: center;
-            gap: 0 4px;
-        }
-
-        .title-char {
-            position: relative;
-            display: inline-block;
-            transform: rotate(var(--tilt, 0deg));
-        }
-
-        .title-char::after {
-            content: "";
-            position: absolute;
-            left: 22%;
-            top: 18%;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.86);
-            box-shadow: 16px 12px 0 rgba(255, 255, 255, 0.52);
-        }
-
-        .title-heart,
-        .title-sparkle,
-        .title-rose,
-        .title-cloud {
-            position: absolute;
-            z-index: 4;
-            pointer-events: none;
-        }
-
-        .title-heart {
-            width: 36px;
-            height: 32px;
-            background: #ff80aa;
-            filter: drop-shadow(3px 3px 0 #21171d);
-            clip-path: path("M18 30 C6 21 1 12 4 7 C7 0 14 1 18 8 C22 1 29 0 32 7 C35 12 30 21 18 30 Z");
-        }
-
-        .title-heart.one { left: 22px; bottom: 16px; transform: rotate(-12deg) scale(0.9); }
-        .title-heart.two { right: 58px; bottom: 18px; transform: rotate(10deg) scale(0.78); }
-
-        .title-sparkle {
-            width: 25px;
-            height: 25px;
-            background: #fff45b;
-            filter: drop-shadow(2px 2px 0 #21171d);
-            clip-path: polygon(50% 0%, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0% 50%, 38% 38%);
-        }
-
-        .title-sparkle.one { left: 20px; top: 38px; transform: scale(0.9); }
-        .title-sparkle.two { right: 24px; top: 48px; transform: scale(0.72); }
-
-        .title-cloud {
+        .theme-title::after {
             right: 26px;
-            top: 34px;
-            width: 58px;
-            height: 36px;
-            border: 5px solid #21171d;
-            border-radius: 999px;
-            background: #ff9fc4;
+            top: -8px;
+            width: 48px;
+            height: 18px;
+            border: 1px solid rgba(117, 70, 54, 0.28);
+            background: rgba(255, 225, 183, 0.86);
+            transform: rotate(7deg);
         }
 
-        .title-cloud::before,
-        .title-cloud::after {
-            content: "";
-            position: absolute;
-            border: 5px solid #21171d;
-            border-radius: 50%;
-            background: #ff9fc4;
-        }
-
-        .title-cloud::before { left: 8px; top: -15px; width: 28px; height: 28px; }
-        .title-cloud::after { right: 7px; top: -11px; width: 24px; height: 24px; }
-
-        .title-rose {
-            top: -36px;
-            width: 58px;
-            height: 88px;
-        }
-
-        .title-rose.left { left: 58px; transform: rotate(-10deg) scale(0.92); }
-        .title-rose.right { right: 82px; transform: rotate(12deg) scale(0.92); }
-
-        .title-rose::before {
-            content: "";
-            position: absolute;
-            left: 9px;
-            top: 0;
-            width: 42px;
-            height: 40px;
-            border: 5px solid #21171d;
-            border-radius: 50%;
-            background: radial-gradient(circle at 40% 38%, #ffd8e4 0 14%, transparent 15%), #ff98b8;
-        }
-
-        .title-rose::after {
-            content: "";
-            position: absolute;
-            left: 30px;
-            top: 38px;
-            width: 7px;
-            height: 50px;
-            border-radius: 999px;
-            background: #5daf68;
-            box-shadow: inset 0 0 0 2px #21171d;
-        }
-
-        .sticker-scene {
+        .letter-scene {
             position: absolute;
             inset: 0;
-            z-index: 5;
+            z-index: 4;
         }
 
-        .sticker {
+        .paper-letter {
             position: absolute;
+            left: 50%;
+            top: 188px;
+            z-index: 8;
+            width: min(338px, calc(100% - 54px));
+            min-height: 330px;
+            padding: 34px 28px 28px;
+            border: 1px solid rgba(126, 82, 60, 0.22);
+            border-radius: 8px;
+            background:
+                linear-gradient(transparent 35px, rgba(198, 123, 105, 0.18) 36px, transparent 37px),
+                linear-gradient(90deg, rgba(190, 91, 82, 0.18) 0 1px, transparent 1px),
+                #fffaf0;
+            background-size: 100% 38px, 36px 100%, 100% 100%;
+            box-shadow: 0 20px 38px rgba(96, 63, 45, 0.18), inset 0 0 34px rgba(238, 202, 166, 0.28);
             opacity: 0;
-            transform: translate(var(--from-x), var(--from-y)) scale(0.72) rotate(var(--from-rotate, 0deg));
+            transform: translate(-50%, 92px) rotateX(52deg) rotate(-4deg) scale(0.82);
+            transform-origin: center top;
+            animation-fill-mode: forwards;
+        }
+
+        .paper-letter::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 86px;
+            height: 1px;
+            background: rgba(201, 126, 108, 0.22);
+            box-shadow: 0 76px 0 rgba(201, 126, 108, 0.18), 0 152px 0 rgba(201, 126, 108, 0.14);
+        }
+
+        .paper-letter::after {
+            content: "";
+            position: absolute;
+            right: 18px;
+            bottom: 18px;
+            width: 62px;
+            height: 42px;
+            border: 1px solid rgba(168, 91, 78, 0.34);
+            border-radius: 50%;
+            opacity: 0.55;
+            transform: rotate(-12deg);
+        }
+
+        .is-started .paper-letter {
+            animation: letter-unfold 1.18s cubic-bezier(.18, .76, .22, 1.08) 0.18s forwards, paper-breathe 5.6s ease-in-out 1.5s infinite;
+        }
+
+        .letter-kicker {
+            color: #9a6b59;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .letter-line {
+            position: relative;
+            z-index: 2;
+            margin-top: 22px;
+            color: #8d4b49;
+            font-family: "Bradley Hand", "Comic Sans MS", "PingFang SC", cursive;
+            font-size: clamp(25px, 6.8vw, 34px);
+            font-weight: 900;
+            line-height: 1.34;
+        }
+
+        .letter-sign {
+            position: relative;
+            z-index: 2;
+            margin-top: 28px;
+            color: #6d554c;
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 1.62;
+        }
+
+        .letter-sign strong {
+            display: block;
+            color: #bc585f;
+            font-family: "Bradley Hand", "Comic Sans MS", "PingFang SC", cursive;
+            font-size: 26px;
+            line-height: 1.2;
+        }
+
+        .envelope-flap {
+            position: absolute;
+            left: 50%;
+            top: 546px;
+            z-index: 6;
+            width: 236px;
+            height: 128px;
+            border: 1px solid rgba(119, 77, 55, 0.24);
+            border-radius: 6px;
+            background: linear-gradient(145deg, #eec9a7, #f8ddbe);
+            box-shadow: 0 18px 30px rgba(100, 67, 47, 0.16);
+            opacity: 0;
+            transform: translate(-50%, 86px) rotate(3deg);
+            animation-fill-mode: forwards;
+        }
+
+        .envelope-flap::before,
+        .envelope-flap::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            clip-path: polygon(0 0, 50% 58%, 100% 0, 100% 100%, 0 100%);
+            background: linear-gradient(180deg, rgba(255, 251, 239, 0.38), rgba(188, 119, 85, 0.12));
+        }
+
+        .envelope-flap::after {
+            clip-path: polygon(0 100%, 50% 44%, 100% 100%);
+            background: rgba(190, 111, 80, 0.18);
+        }
+
+        .keepsake {
+            position: absolute;
+            z-index: 10;
+            opacity: 0;
+            transform: translate(var(--from-x), var(--from-y)) rotate(var(--from-rotate, 0deg)) scale(0.82);
             animation-fill-mode: forwards;
             will-change: transform, opacity;
         }
 
-        .is-started .sticker {
-            animation: sticker-arrive 0.92s cubic-bezier(.18, .88, .24, 1.14) var(--delay, 0s) forwards;
+        .is-started .keepsake {
+            animation: keepsake-arrive 0.86s cubic-bezier(.18, .78, .24, 1.12) var(--delay, 0s) forwards;
         }
 
-        @keyframes sticker-arrive {
+        .is-started .envelope-flap {
+            animation: keepsake-arrive 0.9s cubic-bezier(.18, .78, .24, 1.12) 0.05s forwards;
+        }
+
+        .photo-corner {
+            width: 104px;
+            height: 84px;
+            border: 8px solid #fff8ed;
+            background: linear-gradient(135deg, #d8b491, #f3dac0 58%, #c98f87);
+            box-shadow: 0 10px 22px rgba(96, 63, 45, 0.18);
+        }
+
+        .photo-corner::before,
+        .photo-corner::after {
+            content: "";
+            position: absolute;
+            width: 30px;
+            height: 14px;
+            background: rgba(255, 239, 199, 0.8);
+            transform: rotate(-18deg);
+        }
+
+        .photo-corner::before { left: -14px; top: -14px; }
+        .photo-corner::after { right: -14px; bottom: -12px; }
+
+        .photo-corner.one {
+            left: 30px;
+            top: 156px;
+            --from-x: -170px;
+            --from-y: -90px;
+            --from-rotate: -18deg;
+            --to-rotate: -9deg;
+            --delay: .36s;
+        }
+
+        .photo-corner.two {
+            right: 32px;
+            bottom: 122px;
+            width: 92px;
+            height: 74px;
+            --from-x: 170px;
+            --from-y: 110px;
+            --from-rotate: 22deg;
+            --to-rotate: 8deg;
+            --delay: .7s;
+        }
+
+        .sticky-note {
+            left: 36px;
+            bottom: 154px;
+            width: 122px;
+            min-height: 92px;
+            padding: 20px 12px 12px;
+            border-radius: 6px;
+            background: #fff0a8;
+            color: #8d6343;
+            box-shadow: 0 12px 22px rgba(96, 63, 45, 0.16);
+            font-size: 17px;
+            font-weight: 900;
+            line-height: 1.32;
+            text-align: center;
+            --from-x: -180px;
+            --from-y: 80px;
+            --from-rotate: -18deg;
+            --to-rotate: 5deg;
+            --delay: .82s;
+        }
+
+        .sticky-note::before {
+            content: "";
+            position: absolute;
+            left: 34px;
+            top: -10px;
+            width: 48px;
+            height: 18px;
+            border-radius: 3px;
+            background: rgba(255, 218, 166, 0.86);
+            transform: rotate(-4deg);
+        }
+
+        .stamp {
+            right: 42px;
+            top: 178px;
+            width: 74px;
+            height: 88px;
+            display: grid;
+            place-items: center;
+            border: 2px dashed #b96565;
+            background: #fff4ef;
+            color: #b45157;
+            font-size: 15px;
+            font-weight: 900;
+            text-align: center;
+            line-height: 1.18;
+            --from-x: 150px;
+            --from-y: -110px;
+            --from-rotate: 16deg;
+            --to-rotate: 7deg;
+            --delay: .48s;
+        }
+
+        .pressed-flower {
+            right: 40px;
+            top: 306px;
+            width: 62px;
+            height: 142px;
+            --from-x: 180px;
+            --from-y: 10px;
+            --from-rotate: 24deg;
+            --to-rotate: -10deg;
+            --delay: .92s;
+        }
+
+        .pressed-flower::before {
+            content: "";
+            position: absolute;
+            left: 29px;
+            top: 28px;
+            width: 5px;
+            height: 110px;
+            border-radius: 999px;
+            background: #79935e;
+        }
+
+        .pressed-flower::after {
+            content: "";
+            position: absolute;
+            left: 10px;
+            top: 0;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background:
+                radial-gradient(circle at 50% 50%, #c95762 0 18%, transparent 19%),
+                radial-gradient(circle at 50% 0, #e8a0a0 0 30%, transparent 31%),
+                radial-gradient(circle at 100% 50%, #e8a0a0 0 30%, transparent 31%),
+                radial-gradient(circle at 50% 100%, #e8a0a0 0 30%, transparent 31%),
+                radial-gradient(circle at 0 50%, #e8a0a0 0 30%, transparent 31%);
+            filter: drop-shadow(0 4px 0 rgba(126, 82, 60, 0.12));
+        }
+
+        .petal {
+            width: 22px;
+            height: 34px;
+            border-radius: 70% 30% 70% 30%;
+            background: #d86f73;
+            box-shadow: inset 6px 6px 0 rgba(255, 255, 255, 0.22);
+        }
+
+        .petal.one {
+            left: 76px;
+            top: 306px;
+            --from-x: -120px;
+            --from-y: -80px;
+            --from-rotate: -40deg;
+            --to-rotate: 28deg;
+            --delay: 1.02s;
+        }
+
+        .petal.two {
+            right: 108px;
+            top: 520px;
+            background: #e7a37c;
+            --from-x: 140px;
+            --from-y: 90px;
+            --from-rotate: 48deg;
+            --to-rotate: -24deg;
+            --delay: 1.08s;
+        }
+
+        .petal.three {
+            left: 186px;
+            bottom: 70px;
+            width: 18px;
+            height: 28px;
+            background: #d65567;
+            --from-x: 20px;
+            --from-y: 160px;
+            --from-rotate: 80deg;
+            --to-rotate: 18deg;
+            --delay: 1.14s;
+        }
+
+        .is-started .petal {
+            animation:
+                keepsake-arrive 0.86s cubic-bezier(.18, .78, .24, 1.12) var(--delay, 0s) forwards,
+                petal-drift 4.8s ease-in-out calc(var(--delay, 0s) + 1s) infinite;
+        }
+
+        @keyframes letter-unfold {
             0% {
                 opacity: 0;
-                transform: translate(var(--from-x), var(--from-y)) scale(0.72) rotate(var(--from-rotate, 0deg));
-                filter: blur(1.5px);
+                transform: translate(-50%, 92px) rotateX(52deg) rotate(-4deg) scale(0.82);
+                filter: blur(1px);
             }
-            72% {
+            62% {
                 opacity: 1;
-                transform: translate(0, 0) scale(1.05) rotate(var(--to-rotate, 0deg));
+                transform: translate(-50%, -4px) rotateX(0deg) rotate(1.2deg) scale(1.03);
                 filter: blur(0);
             }
             100% {
                 opacity: 1;
-                transform: translate(0, 0) scale(1) rotate(var(--to-rotate, 0deg));
+                transform: translate(-50%, 0) rotateX(0deg) rotate(-1.4deg) scale(1);
                 filter: blur(0);
             }
         }
 
-        .mom-banner {
-            left: 70px;
-            top: 324px;
-            z-index: 7;
-            display: flex;
-            gap: 3px;
-            color: #cf6f45;
-            font-weight: 1000;
-            --from-x: -220px;
-            --from-y: 20px;
-            --delay: .1s;
-            --from-rotate: -18deg;
-            --to-rotate: 8deg;
+        @keyframes keepsake-arrive {
+            0% {
+                opacity: 0;
+                transform: translate(var(--from-x), var(--from-y)) rotate(var(--from-rotate, 0deg)) scale(0.82);
+                filter: blur(1px);
+            }
+            76% {
+                opacity: 1;
+                transform: translate(0, 0) rotate(var(--to-rotate, 0deg)) scale(1.04);
+                filter: blur(0);
+            }
+            100% {
+                opacity: 1;
+                transform: translate(0, 0) rotate(var(--to-rotate, 0deg)) scale(1);
+                filter: blur(0);
+            }
         }
 
-        .mom-banner span {
-            display: grid;
-            place-items: center;
-            width: 30px;
-            height: 38px;
-            border: 4px solid #9f4c42;
-            background: #ffc272;
-            clip-path: polygon(0 0, 100% 0, 100% 82%, 50% 68%, 0 82%);
-            font-size: 13px;
+        @keyframes paper-breathe {
+            0%, 100% { translate: 0 0; }
+            50% { translate: 0 -4px; }
         }
 
-        .mom-sticker {
-            left: 36px;
-            top: 392px;
-            z-index: 8;
-            width: 124px;
-            height: 142px;
-            --from-x: -240px;
-            --from-y: 160px;
-            --delay: .22s;
-            --from-rotate: -20deg;
-            --to-rotate: -5deg;
-        }
-
-        .mom-face {
-            position: absolute;
-            left: 32px;
-            top: 20px;
-            width: 68px;
-            height: 68px;
-            border: 4px solid #4a3435;
-            border-radius: 50%;
-            background: #ffe0cf;
-        }
-
-        .mom-face::before {
-            content: "";
-            position: absolute;
-            left: -15px;
-            top: -12px;
-            z-index: -1;
-            width: 98px;
-            height: 82px;
-            border: 4px solid #4a3435;
-            border-radius: 48% 52% 58% 42%;
-            background: #ec745b;
-        }
-
-        .mom-face::after {
-            content: "•  •";
-            position: absolute;
-            left: 18px;
-            top: 22px;
-            color: #4a3435;
-            font-size: 20px;
-            letter-spacing: 12px;
-        }
-
-        .mom-body {
-            position: absolute;
-            left: 30px;
-            top: 80px;
-            width: 78px;
-            height: 66px;
-            border: 4px solid #4a3435;
-            border-radius: 30px 30px 16px 16px;
-            background: #93d2ff;
-        }
-
-        .mom-sticker::after {
-            content: "";
-            position: absolute;
-            left: 0;
-            top: 94px;
-            width: 76px;
-            height: 50px;
-            border: 4px solid #4a3435;
-            border-radius: 14px 14px 28px 28px;
-            background: #ffd47d;
-            transform: rotate(-14deg);
-        }
-
-        .balloon-sticker {
-            left: 174px;
-            top: 390px;
-            z-index: 7;
-            width: 72px;
-            height: 122px;
-            --from-x: 0px;
-            --from-y: 300px;
-            --delay: .34s;
-            --from-rotate: 10deg;
-            --to-rotate: 4deg;
-        }
-
-        .balloon-sticker::before {
-            content: "";
-            position: absolute;
-            left: 6px;
-            top: 0;
-            width: 68px;
-            height: 78px;
-            border: 5px solid #21171d;
-            border-radius: 54% 46% 50% 50%;
-            background: linear-gradient(135deg, #b9a5ff, #8e7fff);
-        }
-
-        .balloon-sticker::after {
-            content: "";
-            position: absolute;
-            left: 40px;
-            top: 76px;
-            width: 24px;
-            height: 54px;
-            border-left: 4px solid #21171d;
-            border-radius: 50%;
-            transform: rotate(-12deg);
-        }
-
-        .lollipop-sticker {
-            left: 260px;
-            top: 354px;
-            z-index: 7;
-            width: 48px;
-            height: 104px;
-            --from-x: 120px;
-            --from-y: 260px;
-            --delay: .42s;
-            --from-rotate: 30deg;
-            --to-rotate: -8deg;
-        }
-
-        .lollipop-sticker::before {
-            content: "";
-            position: absolute;
-            width: 42px;
-            height: 42px;
-            border: 5px solid #21171d;
-            border-radius: 50%;
-            background: repeating-radial-gradient(circle, #ff8f7b 0 7px, #ffe0cf 8px 12px);
-        }
-
-        .lollipop-sticker::after {
-            content: "";
-            position: absolute;
-            left: 22px;
-            top: 40px;
-            width: 6px;
-            height: 64px;
-            border-radius: 999px;
-            background: #21171d;
-        }
-
-        .love-mom-sign {
-            right: 32px;
-            top: 396px;
-            z-index: 8;
-            width: 120px;
-            height: 92px;
-            padding-top: 22px;
-            border: 5px solid #9f4a3e;
-            background: #ff775d;
-            color: #ffe38f;
-            text-align: center;
-            font-size: 20px;
-            font-weight: 1000;
-            line-height: 1.05;
-            clip-path: path("M71 105 C24 76 4 49 10 25 C16 2 44 -2 71 23 C98 -2 126 2 132 25 C138 49 118 76 71 105 Z");
-            filter: drop-shadow(0 5px 0 rgba(159, 74, 62, 0.38));
-            --from-x: 240px;
-            --from-y: 90px;
-            --delay: .52s;
-            --from-rotate: 20deg;
-            --to-rotate: 4deg;
-        }
-
-        .main-note {
-            left: 38px;
-            top: 226px;
-            z-index: 10;
-            width: calc(100% - 76px);
-            color: #d64a63;
-            text-align: center;
-            text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.96);
-            font-size: clamp(30px, 8.2vw, 42px);
-            font-weight: 1000;
-            line-height: 1.08;
-            --from-x: 0px;
-            --from-y: 230px;
-            --delay: .66s;
-            --from-rotate: 2deg;
-            --to-rotate: -2deg;
-        }
-
-        .main-note small {
-            display: block;
-            color: #9f8290;
-            font-family: "Bradley Hand", "Comic Sans MS", cursive;
-            margin-top: 3px;
-            font-size: 20px;
-            font-weight: 700;
-        }
-
-        .flower-sticker {
-            width: 56px;
-            height: 78px;
-            z-index: 8;
-            --from-y: 240px;
-            --delay: .74s;
-        }
-
-        .flower-sticker.one { left: 34px; bottom: 50px; --from-x: -180px; --to-rotate: -14deg; }
-        .flower-sticker.two { right: 118px; bottom: 208px; --from-x: 120px; --to-rotate: 12deg; }
-
-        .flower-sticker::before {
-            content: "";
-            position: absolute;
-            left: 16px;
-            top: 0;
-            width: 34px;
-            height: 30px;
-            border: 4px solid #21171d;
-            border-radius: 50%;
-            background: #ffa1b9;
-        }
-
-        .flower-sticker::after {
-            content: "";
-            position: absolute;
-            left: 32px;
-            top: 29px;
-            width: 7px;
-            height: 48px;
-            border-radius: 999px;
-            background: #3cad5b;
-            box-shadow: inset 0 0 0 2px #21171d;
-        }
-
-        .blessing-bubbles {
-            right: 28px;
-            bottom: 148px;
-            z-index: 9;
-            display: grid;
-            gap: 7px;
-            --from-x: 190px;
-            --from-y: 100px;
-            --delay: .82s;
-            --from-rotate: 8deg;
-            --to-rotate: -5deg;
-        }
-
-        .blessing-bubbles span {
-            min-width: 56px;
-            padding: 4px 9px;
-            border: 4px solid #b35770;
-            border-radius: 999px;
-            background: #ffdfea;
-            color: #9a4f78;
-            text-align: center;
-            font-size: 15px;
-            font-weight: 900;
-        }
-
-        .note-sticker {
-            right: 30px;
-            bottom: 48px;
-            z-index: 8;
-            width: 84px;
-            min-height: 104px;
-            padding: 18px 7px 9px;
-            border: 5px solid #a65a8e;
-            border-radius: 8px;
-            background: #ffeef9;
-            color: #7b4a8d;
-            text-align: center;
-            font-size: 14px;
-            font-weight: 900;
-            line-height: 1.16;
-            --from-x: 180px;
-            --from-y: 160px;
-            --delay: .9s;
-            --from-rotate: 16deg;
-            --to-rotate: 4deg;
+        @keyframes petal-drift {
+            0%, 100% { translate: 0 0; }
+            50% { translate: 4px -7px; }
         }
 
         .message-modal {
@@ -546,7 +496,7 @@
             align-items: center;
             justify-content: center;
             padding: 24px;
-            background: rgba(74, 42, 55, 0.26);
+            background: rgba(72, 48, 40, 0.3);
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.34s ease;
@@ -558,12 +508,12 @@
         }
 
         .message-dialog {
-            width: min(330px, 100%);
-            padding: 26px 22px 22px;
-            border: 4px solid #302027;
-            border-radius: 18px;
-            background: #fff9fc;
-            box-shadow: 0 18px 0 rgba(220, 93, 138, 0.2), 0 28px 70px rgba(74, 42, 55, 0.28);
+            width: min(342px, 100%);
+            padding: 28px 24px 22px;
+            border: 1px solid rgba(126, 82, 60, 0.25);
+            border-radius: 14px;
+            background: #fffaf0;
+            box-shadow: 0 18px 0 rgba(181, 105, 91, 0.14), 0 30px 70px rgba(72, 48, 40, 0.26);
             text-align: center;
             transform: translateY(18px) scale(0.94);
             transition: transform 0.42s cubic-bezier(.18, .88, .24, 1.15);
@@ -575,16 +525,17 @@
 
         .message-dialog h2 {
             margin-bottom: 12px;
-            color: #d64a63;
-            font-size: 26px;
+            color: #b85055;
+            font-family: "Bradley Hand", "Comic Sans MS", "PingFang SC", cursive;
+            font-size: 28px;
             line-height: 1.18;
         }
 
         .message-dialog p {
-            color: #59454d;
+            color: #5d4941;
             font-size: 17px;
             font-weight: 700;
-            line-height: 1.72;
+            line-height: 1.75;
         }
 
         .message-dialog button {
@@ -593,9 +544,9 @@
             margin-top: 18px;
             border: 0;
             border-radius: 999px;
-            background: #ff7da7;
-            color: #fff;
-            box-shadow: 0 7px 0 #d64a63;
+            background: #b85055;
+            color: #fffaf0;
+            box-shadow: 0 7px 0 #8d4b49;
             font-size: 16px;
             font-weight: 900;
             cursor: pointer;
@@ -611,152 +562,145 @@
             }
 
             .theme-title {
-                top: max(28px, env(safe-area-inset-top));
-                width: min(314px, calc(100% - 50px));
-                min-height: 134px;
-                font-size: clamp(38px, 11.8vw, 56px);
+                top: max(24px, env(safe-area-inset-top));
+                width: min(306px, calc(100% - 44px));
+                font-size: clamp(32px, 9.6vw, 44px);
             }
 
-            .main-note {
-                left: 24px;
-                top: 210px;
-                width: calc(100% - 48px);
-                font-size: clamp(28px, 8.8vw, 38px);
+            .paper-letter {
+                top: 176px;
+                width: min(318px, calc(100% - 44px));
+                min-height: 316px;
+                padding: 30px 23px 24px;
             }
 
-            .main-note small { font-size: 18px; }
-            .mom-banner { left: 52px; top: 306px; }
-            .mom-sticker { left: 18px; top: 372px; transform-origin: left top; }
-            .love-mom-sign { right: 16px; top: 374px; width: 112px; height: 86px; font-size: 18px; }
-            .balloon-sticker { left: 140px; top: 372px; }
-            .lollipop-sticker { left: 238px; top: 332px; }
-            .flower-sticker.one { bottom: 38px; }
-            .flower-sticker.two { right: 108px; bottom: 184px; }
-            .blessing-bubbles { right: 18px; bottom: 132px; }
-            .note-sticker { right: 22px; bottom: 34px; width: 78px; min-height: 98px; font-size: 13px; }
-            .message-dialog p { font-size: 16px; }
-        }
-
-        @media (max-height: 660px) {
-            .theme-title {
-                top: max(20px, env(safe-area-inset-top));
-                min-height: 118px;
-                padding-top: 16px;
-                font-size: clamp(34px, 10.8vw, 50px);
+            .letter-line {
+                font-size: clamp(24px, 6.8vw, 30px);
             }
 
-            .theme-title::before { inset: -11px; }
-            .title-rose { top: -31px; transform-origin: bottom center; }
-            .title-rose.left { left: 52px; transform: rotate(-10deg) scale(0.8); }
-            .title-rose.right { right: 72px; transform: rotate(12deg) scale(0.8); }
-            .title-cloud { right: 22px; top: 26px; transform: scale(0.86); transform-origin: top right; }
-            .main-note { top: 178px; font-size: clamp(24px, 7.7vw, 32px); }
-            .main-note small { font-size: 16px; }
-            .mom-banner { top: 262px; transform-origin: left top; }
-            .mom-sticker { top: 314px; transform-origin: left top; }
-            .balloon-sticker { top: 316px; transform-origin: top center; }
-            .lollipop-sticker { top: 284px; transform-origin: top center; }
-            .love-mom-sign { top: 318px; transform-origin: top right; }
-            .flower-sticker.two { bottom: 154px; }
-            .blessing-bubbles { bottom: 104px; }
-            .note-sticker { bottom: 22px; }
+            .envelope-flap {
+                top: 524px;
+                width: 210px;
+                height: 116px;
+            }
+
+            .photo-corner.one { left: 18px; top: 144px; transform: scale(0.86); }
+            .photo-corner.two { right: 20px; bottom: 104px; transform: scale(0.86); }
+            .sticky-note { left: 22px; bottom: 138px; width: 108px; font-size: 15px; }
+            .stamp { right: 26px; top: 166px; width: 66px; height: 78px; font-size: 13px; }
+            .pressed-flower { right: 26px; top: 304px; transform: scale(0.9); }
+            .petal.one { left: 58px; top: 300px; }
+            .petal.two { right: 90px; top: 502px; }
+
+            .message-dialog {
+                width: min(326px, 100%);
+                padding: 25px 20px 21px;
+            }
+
+            .message-dialog p {
+                font-size: 16px;
+            }
         }
     </style>
 </head>
 <body>
-    <main class="stage" id="stage" aria-label="母亲节快乐">
-        <h1 role="button" class="theme-title" id="themeTitle" tabindex="0" aria-label="点击开启动效">
-            <span class="title-rose left"></span>
-            <span class="title-rose right"></span>
-            <span class="title-cloud"></span>
-            <span class="title-sparkle one"></span>
-            <span class="title-sparkle two"></span>
-            <span class="title-heart one"></span>
-            <span class="title-heart two"></span>
-            <span class="title-bubble" aria-label="母亲节快乐">
-                <span class="title-char" style="--tilt:-5deg">母</span>
-                <span class="title-char" style="--tilt:4deg">亲</span>
-                <span class="title-char" style="--tilt:-2deg">节</span>
-                <span class="title-char" style="--tilt:3deg">快</span>
-                <span class="title-char" style="--tilt:-4deg">乐</span>
-            </span>
-        </h1>
+    <main class="stage" id="stage">
+        <h1 role="button" class="theme-title" id="themeTitle" tabindex="0" aria-label="重新播放母亲节家书动画">母亲节快乐</h1>
 
-        <section class="sticker-scene" aria-label="母亲节贴纸">
-            <div class="mom-banner sticker" aria-label="MOM 小旗"><span>M</span><span>O</span><span>M</span></div>
-            <div class="mom-sticker sticker" aria-label="妈妈抱花"><div class="mom-face"></div><div class="mom-body"></div></div>
-            <div class="balloon-sticker sticker" aria-label="气球"></div>
-            <div class="lollipop-sticker sticker" aria-hidden="true"></div>
-            <div class="love-mom-sign sticker" aria-label="LOVE YOU MOM">LOVE YOU<br>MOM</div>
-            <div class="main-note sticker">妈妈，您辛苦了<small>I Love Mom!</small></div>
-            <div class="flower-sticker one sticker" aria-hidden="true"></div>
-            <div class="flower-sticker two sticker" aria-hidden="true"></div>
-            <div class="blessing-bubbles sticker" aria-label="祝福气泡"><span>健康</span><span>平安</span><span>快乐</span></div>
-            <div class="note-sticker sticker" aria-label="便签">HAPPY<br>MOTHER'S<br>DAY!</div>
+        <section class="letter-scene" aria-label="写给妈妈的手写家书">
+            <div class="envelope-flap" aria-hidden="true"></div>
+
+            <article class="paper-letter">
+                <p class="letter-kicker">To 妈妈</p>
+                <p class="letter-line">妈妈，今天想把平常没说出口的话，认真写给您。</p>
+                <p class="letter-sign">
+                    愿今天的风慢一点，花香久一点。
+                    <strong>爱您的我</strong>
+                </p>
+            </article>
+
+            <div class="keepsake photo-corner one" aria-hidden="true"></div>
+            <div class="keepsake photo-corner two" aria-hidden="true"></div>
+            <div class="keepsake sticky-note">谢谢您<br>一直在</div>
+            <div class="keepsake stamp">Mother's<br>Day</div>
+            <div class="keepsake pressed-flower" aria-hidden="true"></div>
+            <div class="keepsake petal one" aria-hidden="true"></div>
+            <div class="keepsake petal two" aria-hidden="true"></div>
+            <div class="keepsake petal three" aria-hidden="true"></div>
         </section>
     </main>
 
     <div class="message-modal" id="messageModal" aria-hidden="true">
         <div class="message-dialog" role="dialog" aria-modal="true" aria-labelledby="messageTitle">
-            <h2 id="messageTitle">给妈妈的话</h2>
-            <p>
-                妈妈，母亲节快乐。谢谢您把日子过成温柔的家，
-                也把爱悄悄藏进每一顿饭、每一句叮嘱和每一次等待里。
-                愿您永远健康、平安、快乐，我爱您。
-            </p>
-            <button type="button" id="closeMessage">收下祝福</button>
+            <h2 id="messageTitle">写给妈妈</h2>
+            <p>妈妈，谢谢您把日子过成温柔的家。愿您每天都轻松一点、开心一点，被爱包围，也被岁月温柔以待。母亲节快乐，我永远爱您。</p>
+            <button type="button" id="closeMessage">收下这封信</button>
         </div>
     </div>
 
     <script>
         const stage = document.getElementById('stage');
         const themeTitle = document.getElementById('themeTitle');
-        const stickers = Array.from(document.querySelectorAll('.sticker'));
         const messageModal = document.getElementById('messageModal');
         const closeMessage = document.getElementById('closeMessage');
-        let finishedStickerCount = 0;
-
-        function openMessageModal() {
-            messageModal.classList.add('active');
-            messageModal.setAttribute('aria-hidden', 'false');
-        }
+        const animatedKeepsakes = Array.from(document.querySelectorAll('.keepsake'));
+        const paperLetter = document.querySelector('.paper-letter');
+        const totalAnimationPieces = animatedKeepsakes.length + 1;
+        let finishedKeepsakeCount = 0;
+        let modalTimer = null;
 
         function closeMessageModal() {
             messageModal.classList.remove('active');
             messageModal.setAttribute('aria-hidden', 'true');
         }
 
-        function startStickerAnimation() {
+        function openMessageModal() {
+            messageModal.classList.add('active');
+            messageModal.setAttribute('aria-hidden', 'false');
+        }
+
+        function startLetterAnimation() {
             closeMessageModal();
-            finishedStickerCount = 0;
+            window.clearTimeout(modalTimer);
+            finishedKeepsakeCount = 0;
             stage.classList.remove('is-started');
             void stage.offsetWidth;
             stage.classList.add('is-started');
         }
 
-        stickers.forEach((sticker) => {
-            sticker.addEventListener('animationend', (event) => {
-                if (event.animationName !== 'sticker-arrive') return;
-                finishedStickerCount += 1;
-                if (finishedStickerCount >= stickers.length) {
-                    openMessageModal();
-                }
-            });
+        function handleAnimationEnd(event) {
+            if (event.animationName !== 'keepsake-arrive' && event.animationName !== 'letter-unfold') {
+                return;
+            }
+
+            finishedKeepsakeCount += 1;
+
+            if (finishedKeepsakeCount >= totalAnimationPieces) {
+                window.clearTimeout(modalTimer);
+                modalTimer = window.setTimeout(openMessageModal, 360);
+            }
+        }
+
+        paperLetter.addEventListener('animationend', handleAnimationEnd);
+        animatedKeepsakes.forEach((keepsake) => {
+            keepsake.addEventListener('animationend', handleAnimationEnd);
         });
 
-        themeTitle.addEventListener('click', startStickerAnimation);
+        themeTitle.addEventListener('click', startLetterAnimation);
         themeTitle.addEventListener('keydown', (event) => {
             if (event.key === 'Enter' || event.key === ' ') {
                 event.preventDefault();
-                startStickerAnimation();
+                startLetterAnimation();
             }
         });
         closeMessage.addEventListener('click', closeMessageModal);
-
+        messageModal.addEventListener('click', (event) => {
+            if (event.target === messageModal) {
+                closeMessageModal();
+            }
+        });
         window.addEventListener('load', () => {
-            requestAnimationFrame(() => {
-                startStickerAnimation();
-            });
+            startLetterAnimation();
         });
     </script>
 </body>
