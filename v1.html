@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="一封充满想念的情书">
+    <title>💌 给你的情书</title>
+
+    <!-- 微信分享meta标签 -->
+    <meta property="og:title" content="💌 给你的情书">
+    <meta property="og:description" content="每一句都是想你，每一页都是爱你 💕">
+    <meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/lC4pRubianpicD7GiciaibDvic8YQ/0">
+    <meta property="og:url" content="">
+    <meta property="og:type" content="website">
+
+    <!-- 微信jssdk需要 -->
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif;
+            background: linear-gradient(135deg, #ff6b6b 0%, #feca57 50%, #ff9ff3 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* 飘落爱心背景 */
+        .hearts-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .floating-heart {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 20px;
+            animation: float-up linear infinite;
+            text-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+        }
+
+        @keyframes float-up {
+            0% {
+                transform: translateY(100vh) rotate(0deg) scale(0.5);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 420px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .envelope-wrapper {
+            perspective: 1000px;
+            margin-bottom: 30px;
+        }
+
+        .envelope {
+            width: 100%;
+            height: 220px;
+            background: linear-gradient(145deg, #fff5f5 0%, #ffe0e0 100%);
+            border-radius: 0 0 20px 20px;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(255, 107, 107, 0.3);
+            transform-style: preserve-3d;
+            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            cursor: pointer;
+        }
+
+        .envelope.open {
+            transform: translateY(-80px) scale(0.9);
+            opacity: 0;
+        }
+
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background: linear-gradient(145deg, #fff 0%, #ffe0e0 100%);
+            clip-path: polygon(0 0, 50% 100%, 100% 0);
+            transform-origin: top;
+            transition: transform 0.6s ease;
+            z-index: 10;
+        }
+
+        .envelope.open .envelope-flap {
+            transform: rotateX(180deg);
+        }
+
+        .envelope-seal {
+            position: absolute;
+            top: 35%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(145deg, #ff6b6b, #ee5a6f);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            z-index: 11;
+            box-shadow: 0 4px 20px rgba(238, 90, 111, 0.5);
+            animation: heartbeat 1.2s infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.15); }
+        }
+
+        .hint {
+            position: absolute;
+            bottom: -45px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            animation: bounce 2s infinite;
+            white-space: nowrap;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-8px); }
+        }
+
+        .letter {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            width: 92%;
+            max-width: 400px;
+            max-height: 85vh;
+            background: white;
+            border-radius: 24px;
+            padding: 30px 25px;
+            box-shadow: 0 30px 100px rgba(0,0,0,0.3);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 100;
+            overflow-y: auto;
+            border: 3px solid #ffe0e0;
+        }
+
+        .letter.show {
+            opacity: 1;
+            pointer-events: all;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .letter-header {
+            text-align: center;
+            margin-bottom: 22px;
+            padding-bottom: 18px;
+            border-bottom: 3px dashed #ffe0e0;
+        }
+
+        .big-heart {
+            font-size: 48px;
+            display: inline-block;
+            animation: heartbeat 1.5s infinite;
+            margin-bottom: 10px;
+        }
+
+        .letter-title {
+            font-size: 23px;
+            color: #ff6b6b;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .letter-subtitle {
+            font-size: 13px;
+            color: #999;
+            line-height: 1.7;
+        }
+
+        .sentence-list {
+            display: grid;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .sentence-card {
+            position: relative;
+            padding: 16px 18px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe0e0 100%);
+            border: 2px solid rgba(255, 107, 107, 0.18);
+            color: #555;
+            font-size: 15px;
+            font-weight: 700;
+            line-height: 1.9;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .sentence-card::before {
+            content: '💕';
+            position: absolute;
+            top: 8px;
+            right: 10px;
+            opacity: 0.28;
+        }
+
+        .sentence-card::after {
+            content: '💕';
+            position: absolute;
+            bottom: 8px;
+            left: 10px;
+            opacity: 0.22;
+        }
+
+        .heart-divider {
+            text-align: center;
+            font-size: 24px;
+            margin: 22px 0;
+            color: #ff6b6b;
+            letter-spacing: 10px;
+        }
+
+        .letter-footer {
+            text-align: center;
+            margin-top: 28px;
+            padding-top: 22px;
+            border-top: 3px dashed #ffe0e0;
+        }
+
+        .footer-text {
+            color: #888;
+            font-size: 13px;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .signature {
+            font-size: 16px;
+            color: #ff6b6b;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 700;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #ff6b6b;
+            border: 2px solid #ff6b6b;
+        }
+
+        .btn-secondary:hover {
+            background: #fff5f5;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 36px;
+            height: 36px;
+            background: #fff5f5;
+            border: none;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            color: #ff6b6b;
+        }
+
+        .close-btn:hover {
+            background: #ff6b6b;
+            color: white;
+            transform: rotate(90deg);
+        }
+
+        @media (max-width: 480px) {
+            .container { padding: 30px 15px; }
+            .envelope { height: 180px; }
+            .letter { padding: 25px 20px; width: 95%; }
+            .letter-title { font-size: 21px; }
+            .sentence-card { padding: 14px 16px; font-size: 14px; }
+        }
+
+        .love-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            display: none;
+        }
+
+        .love-rain.active {
+            display: block;
+        }
+
+        .rain-heart {
+            position: absolute;
+            font-size: 24px;
+            animation: rain-fall linear forwards;
+        }
+
+        @keyframes rain-fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hearts-container" id="heartsContainer"></div>
+    <div class="love-rain" id="loveRain"></div>
+
+    <div class="container">
+        <div class="envelope-wrapper">
+            <div class="envelope" id="envelope" onclick="openLetter()">
+                <div class="envelope-flap"></div>
+                <div class="envelope-seal">💝</div>
+                <div class="hint">💕 点击打开情书</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="letter" id="letter">
+        <button class="close-btn" onclick="closeLetter()">×</button>
+
+        <div class="letter-header">
+            <div class="big-heart">💖</div>
+            <div class="letter-title">给你的情书</div>
+            <div class="letter-subtitle">每一句都是想你，每一页都是爱你</div>
+        </div>
+
+        <div class="sentence-list">
+            <div class="sentence-card">宝贝我想你，想把今天遇见的所有温柔都讲给你听。</div>
+            <div class="sentence-card">今天也很爱你，比昨天多一点，比明天少一点。</div>
+            <div class="sentence-card">想把所有温柔都给你，连风路过的时候也替我抱抱你。</div>
+            <div class="sentence-card">你不在身边的时候，我的心会偷偷跑去找你。</div>
+            <div class="sentence-card">每次想到你，普通的一天都会变得亮晶晶。</div>
+            <div class="sentence-card">我喜欢你笑起来的样子，也喜欢你什么都不说时的可爱。</div>
+            <div class="sentence-card">想和你一起吃饭、散步、看云，把慢慢的日子过成甜甜的歌。</div>
+            <div class="sentence-card">宝贝，愿你醒来有好心情，睡前有我的想念陪着你。</div>
+        </div>
+
+        <div class="heart-divider">💗 💗 💗</div>
+
+        <div class="letter-footer">
+            <div class="footer-text">
+                这封信没有复杂的话<br>
+                只有一句一句认真想你 💞
+            </div>
+            <div class="signature">—— 永远爱你的人 💌</div>
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="startLoveRain()">💕 爱心雨</button>
+                <button class="btn btn-secondary" onclick="share()">💌 分享给Ta</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function createFloatingHearts() {
+            const container = document.getElementById('heartsContainer');
+            const hearts = ['💕', '💖', '💗', '💓', '💝', '💘', '💞'];
+
+            for (let i = 0; i < 25; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'floating-heart';
+                heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDuration = (10 + Math.random() * 10) + 's';
+                heart.style.animationDelay = Math.random() * 10 + 's';
+                heart.style.fontSize = (15 + Math.random() * 20) + 'px';
+                container.appendChild(heart);
+            }
+        }
+
+        function startLoveRain() {
+            const rain = document.getElementById('loveRain');
+            rain.classList.add('active');
+            const hearts = ['💕', '💖', '💗', '💓', '💝', '💘', '💞', '💟'];
+
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'rain-heart';
+                    heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                    heart.style.left = Math.random() * 100 + '%';
+                    heart.style.top = '-50px';
+                    heart.style.animationDuration = (2 + Math.random() * 2) + 's';
+                    heart.style.fontSize = (20 + Math.random() * 15) + 'px';
+                    rain.appendChild(heart);
+
+                    setTimeout(() => heart.remove(), 4000);
+                }, i * 50);
+            }
+
+            setTimeout(() => {
+                rain.classList.remove('active');
+            }, 5000);
+        }
+
+        function openLetter() {
+            const envelope = document.getElementById('envelope');
+            const letter = document.getElementById('letter');
+
+            envelope.classList.add('open');
+
+            setTimeout(() => {
+                letter.classList.add('show');
+                startLoveRain();
+            }, 400);
+        }
+
+        function closeLetter() {
+            const envelope = document.getElementById('envelope');
+            const letter = document.getElementById('letter');
+
+            letter.classList.remove('show');
+
+            setTimeout(() => {
+                envelope.classList.remove('open');
+            }, 300);
+        }
+
+        function share() {
+            if (navigator.share) {
+                navigator.share({
+                    title: '💌 给你的情书',
+                    text: '这是一封写满想念的情书，请查收～',
+                    url: window.location.href
+                });
+            } else {
+                alert('点击右上角菜单，选择"发送给朋友" 💝');
+            }
+        }
+
+        window.onload = function() {
+            createFloatingHearts();
+        };
+
+        document.getElementById('letter').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeLetter();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="我们的纪念日日历">
+    <title>Memorial Day</title>
+
+    <meta property="og:title" content="Memorial Day">
+    <meta property="og:description" content="我们的纪念日日历">
+    <meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/lC4pRubianpicD7GiciaibDvic8YQ/0">
+    <meta property="og:url" content="">
+    <meta property="og:type" content="website">
+
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html,
+        body {
+            width: 100%;
+            min-height: 100%;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 20% 18%, rgba(255, 209, 102, 0.32) 0 10%, transparent 26%),
+                radial-gradient(circle at 82% 16%, rgba(76, 201, 240, 0.2) 0 9%, transparent 24%),
+                linear-gradient(160deg, #fff8ef 0%, #ffe6e6 46%, #dcefff 100%);
+            color: #302832;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", sans-serif;
+        }
+
+        .page {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: min(100vw, 460px);
+            min-height: 100vh;
+            padding: 28px 22px;
+        }
+
+        .calendar-shell {
+            position: relative;
+            width: min(380px, 100%);
+            padding: 24px 18px 20px;
+            border: 2px solid rgba(52, 43, 55, 0.18);
+            border-radius: 28px;
+            background: rgba(255, 255, 255, 0.62);
+            box-shadow: 0 26px 70px rgba(108, 70, 86, 0.24);
+            backdrop-filter: blur(16px);
+        }
+
+        .calendar-top {
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .calendar-kicker {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 28px;
+            padding: 0 12px;
+            border-radius: 999px;
+            background: #f45b69;
+            color: #fff8f3;
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: 0;
+            box-shadow: 0 8px 18px rgba(244, 91, 105, 0.28);
+        }
+
+        h1 {
+            margin-top: 12px;
+            color: #332a34;
+            font-size: clamp(34px, 10vw, 48px);
+            font-weight: 1000;
+            line-height: 1;
+            letter-spacing: 0;
+        }
+
+        .calendar-subtitle {
+            margin-top: 8px;
+            color: #41616c;
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        .calendar-pages {
+            position: relative;
+            min-height: 430px;
+            perspective: 1200px;
+        }
+
+        .calendar-card {
+            position: relative;
+            min-height: 418px;
+            padding: 54px 24px 24px;
+            border: 2px solid #2d2630;
+            border-radius: 18px;
+            background:
+                linear-gradient(#fffaf7 0 0) padding-box,
+                repeating-linear-gradient(180deg, rgba(244, 91, 105, 0.08) 0 1px, transparent 1px 34px);
+            box-shadow:
+                0 12px 0 #f8c8a2,
+                0 22px 34px rgba(67, 48, 61, 0.2);
+            transform-origin: center;
+        }
+
+        .calendar-card.is-scaling {
+            animation: calendar-scale 360ms ease both;
+        }
+
+        .calendar-card.is-flipping {
+            animation: calendar-flip 520ms cubic-bezier(0.2, 0.84, 0.24, 1) both;
+        }
+
+        .calendar-card.is-flipping[data-direction="prev"] {
+            animation-name: calendar-flip-prev;
+        }
+
+        .calendar-card.is-flipping[data-direction="jump"] {
+            animation-name: calendar-flip-jump;
+        }
+
+        .calendar-card::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            height: 42px;
+            border-bottom: 2px solid #2d2630;
+            border-radius: 16px 16px 0 0;
+            background: linear-gradient(90deg, #f45b69 0%, #ffb703 52%, #277da1 100%);
+        }
+
+        .binding-rings {
+            position: absolute;
+            top: 17px;
+            left: 50%;
+            z-index: 2;
+            display: flex;
+            gap: 42px;
+            transform: translateX(-50%);
+        }
+
+        .binding-rings span {
+            width: 20px;
+            height: 42px;
+            border: 4px solid #2d2630;
+            border-bottom-color: transparent;
+            border-radius: 999px 999px 0 0;
+            background: linear-gradient(90deg, #ffd166, #f7a955);
+            box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.48);
+        }
+
+        .date-block {
+            display: block;
+            margin-top: 10px;
+        }
+
+        .date-day {
+            display: block;
+            color: #f45b69;
+            font-size: clamp(38px, 11vw, 54px);
+            font-weight: 1000;
+            line-height: 1;
+            letter-spacing: 0;
+            text-shadow: 4px 4px 0 #ffe0c8;
+        }
+
+        .date-meta {
+            margin-top: 8px;
+            text-align: left;
+        }
+
+        .date-month {
+            color: #277da1;
+            font-size: 18px;
+            font-weight: 1000;
+            line-height: 1;
+        }
+
+        .date-year {
+            margin-top: 5px;
+            color: #6b5d68;
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .date-lunar {
+            margin-top: 6px;
+            color: #8a4f36;
+            font-size: 13px;
+            font-weight: 900;
+            line-height: 1.25;
+        }
+
+        .anniversary-title {
+            margin-top: 18px;
+            color: #2d2630;
+            font-size: 29px;
+            font-weight: 1000;
+            line-height: 1.15;
+            letter-spacing: 0;
+        }
+
+        .anniversary-status {
+            display: inline-flex;
+            align-items: center;
+            min-height: 34px;
+            max-width: 100%;
+            margin-top: 14px;
+            padding: 0 12px;
+            border: 2px solid rgba(39, 125, 161, 0.28);
+            border-radius: 999px;
+            background: #e8f6fb;
+            color: #255a69;
+            font-size: 13px;
+            font-weight: 900;
+            line-height: 1.2;
+        }
+
+        .anniversary-copy {
+            margin-top: 18px;
+            color: #4b4049;
+            font-size: 17px;
+            font-weight: 750;
+            line-height: 1.65;
+        }
+
+        .calendar-note {
+            position: absolute;
+            right: 18px;
+            bottom: 18px;
+            width: 84px;
+            min-height: 72px;
+            padding: 12px 10px;
+            border: 2px solid #2d2630;
+            border-radius: 8px;
+            background: #ffd166;
+            color: #5a3a00;
+            font-size: 13px;
+            font-weight: 1000;
+            line-height: 1.25;
+            text-align: center;
+            transform: rotate(5deg);
+            box-shadow: 5px 7px 0 rgba(45, 38, 48, 0.12);
+        }
+
+        .calendar-controls {
+            display: grid;
+            grid-template-columns: 52px 1fr 52px;
+            gap: 12px;
+            align-items: center;
+            margin-top: 18px;
+        }
+
+        .calendar-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 52px;
+            height: 52px;
+            border: 2px solid #2d2630;
+            border-radius: 50%;
+            background: #fffaf7;
+            color: #2d2630;
+            font-size: 27px;
+            font-weight: 1000;
+            cursor: pointer;
+            box-shadow: 0 6px 0 #ffc6b4;
+        }
+
+        .calendar-button:active {
+            transform: translateY(3px);
+            box-shadow: 0 3px 0 #ffc6b4;
+        }
+
+        .anniversary-dots {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            min-height: 28px;
+        }
+
+        .anniversary-dot {
+            width: 9px;
+            height: 9px;
+            border: 0;
+            border-radius: 50%;
+            background: rgba(45, 38, 48, 0.22);
+            cursor: pointer;
+        }
+
+        .anniversary-dot.active {
+            width: 24px;
+            border-radius: 999px;
+            background: #f45b69;
+        }
+
+        @keyframes calendar-scale {
+            0% {
+                opacity: 0.6;
+                transform: scale(0.92);
+            }
+            58% {
+                opacity: 1;
+                transform: scale(1.035);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes calendar-flip {
+            0% {
+                opacity: 0.72;
+                transform: rotateY(-18deg) translateX(16px) scale(0.98);
+                box-shadow:
+                    0 12px 0 #f8c8a2,
+                    0 18px 28px rgba(67, 48, 61, 0.18);
+            }
+            48% {
+                opacity: 0.92;
+                transform: rotateY(7deg) translateX(-4px) scale(1.015);
+            }
+            100% {
+                opacity: 1;
+                transform: rotateY(0) translateX(0) scale(1);
+                box-shadow:
+                    0 12px 0 #f8c8a2,
+                    0 22px 34px rgba(67, 48, 61, 0.2);
+            }
+        }
+
+        @keyframes calendar-flip-prev {
+            0% {
+                opacity: 0.72;
+                transform: rotateY(18deg) translateX(-16px) scale(0.98);
+                box-shadow:
+                    0 12px 0 #f8c8a2,
+                    0 18px 28px rgba(67, 48, 61, 0.18);
+            }
+            48% {
+                opacity: 0.92;
+                transform: rotateY(-7deg) translateX(4px) scale(1.015);
+            }
+            100% {
+                opacity: 1;
+                transform: rotateY(0) translateX(0) scale(1);
+                box-shadow:
+                    0 12px 0 #f8c8a2,
+                    0 22px 34px rgba(67, 48, 61, 0.2);
+            }
+        }
+
+        @keyframes calendar-flip-jump {
+            0% {
+                opacity: 0.7;
+                transform: rotateX(12deg) translateY(14px) scale(0.98);
+            }
+            54% {
+                opacity: 0.94;
+                transform: rotateX(-5deg) translateY(-4px) scale(1.012);
+            }
+            100% {
+                opacity: 1;
+                transform: rotateX(0) translateY(0) scale(1);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page {
+                padding: 20px 14px;
+            }
+
+            .calendar-shell {
+                padding: 20px 14px 18px;
+                border-radius: 24px;
+            }
+
+            .calendar-pages {
+                min-height: 398px;
+            }
+
+            .calendar-card {
+                min-height: 386px;
+                padding: 50px 18px 20px;
+            }
+
+            .anniversary-title {
+                font-size: 25px;
+            }
+
+            .anniversary-copy {
+                max-width: calc(100% - 88px);
+                font-size: 15px;
+            }
+
+            .calendar-note {
+                right: 14px;
+                bottom: 16px;
+                width: 76px;
+                min-height: 66px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="page" aria-label="我们的纪念日日历">
+        <section class="calendar-shell">
+            <header class="calendar-top">
+                <span class="calendar-kicker">Memorial Day</span>
+                <h1>Memorial Day</h1>
+                <p class="calendar-subtitle">我们的纪念日日历</p>
+            </header>
+
+            <div class="calendar-pages">
+                <article class="calendar-card" id="calendarCard" aria-live="polite">
+                    <div class="binding-rings" aria-hidden="true">
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <div class="date-block">
+                        <div class="date-day" id="dateDay">--</div>
+                        <div class="date-meta">
+                            <div class="date-month" id="dateMonth">纪念日</div>
+                            <div class="date-year" id="dateYear">数字日期</div>
+                            <div class="date-lunar" id="dateLunar">农历日期</div>
+                        </div>
+                    </div>
+                    <h2 class="anniversary-title" id="anniversaryTitle">纪念日</h2>
+                    <p class="anniversary-status" id="anniversaryStatus">正在翻到最近的一页</p>
+                    <p class="anniversary-copy" id="anniversaryCopy">把每一个普通日期，都悄悄收进我们的日历里。</p>
+                    <div class="calendar-note" id="calendarNote">最近<br>一页</div>
+                </article>
+            </div>
+
+            <div class="calendar-controls">
+                <button class="calendar-button" id="prevButton" type="button" aria-label="查看上一个纪念日">‹</button>
+                <div class="anniversary-dots" id="anniversaryDots" aria-label="纪念日页码"></div>
+                <button class="calendar-button" id="nextButton" type="button" aria-label="查看下一个纪念日">›</button>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const TOGETHER_START = '2026-01-31';
+        const MONTHLY_PREVIEW = [
+            { title: '在一起1个月', date: '2026-02-28' },
+            { title: '在一起2个月', date: '2026-03-31' },
+            { title: '在一起12个月', date: '2027-01-31' },
+            { title: '在一起24个月', date: '2028-01-31' },
+            { title: '月末示例', date: '2026-04-30' }
+        ];
+        const lunarYearlyDates = {
+            '2024-03-20': '2024-04-27',
+            '2024-07-07': '2024-08-09',
+            '2024-09-02': '2024-10-03',
+            '2025-03-20': '2025-04-16',
+            '2025-07-07': '2025-08-28',
+            '2025-09-02': '2025-10-21',
+            '2026-03-20': '2026-05-05',
+            '2026-07-07': '2026-08-18',
+            '2026-09-02': '2026-10-10',
+            '2027-03-20': '2027-04-25',
+            '2027-07-07': '2027-08-07',
+            '2027-09-02': '2027-09-30',
+            '2028-03-20': '2028-04-13',
+            '2028-07-07': '2028-08-25',
+            '2028-09-02': '2028-10-18',
+            '2029-03-20': '2029-05-02',
+            '2029-07-07': '2029-08-15',
+            '2029-09-02': '2029-10-08',
+            '2030-03-20': '2030-04-21',
+            '2030-07-07': '2030-08-04',
+            '2030-09-02': '2030-09-27'
+        };
+        const BASE_ANNIVERSARIES = [
+            {
+                id: 'first-meet',
+                title: '第一次认识',
+                date: '2026-01-13',
+                tagline: '从这一天开始，世界多了一个很想记住的人。',
+                tone: '起点'
+            },
+            {
+                id: 'together',
+                title: '在一起',
+                date: '2026-01-31',
+                tagline: '这一天，我们把喜欢认真地说给彼此听。',
+                tone: '正式'
+            },
+            {
+                id: 'major-anniversary',
+                type: 'solarYearly',
+                repeat: 'solar-yearly',
+                title: '大纪念日',
+                monthDay: '01-31',
+                date: '2026-01-31',
+                tagline: '每年 1.31 都是大大的纪念日，要被认真圈起来。',
+                tone: '大纪念'
+            },
+            {
+                id: 'minor-anniversary',
+                type: 'solarYearly',
+                repeat: 'solar-yearly',
+                title: '小纪念日',
+                monthDay: '02-08',
+                date: '2026-02-08',
+                tagline: '每年 2.08 也有一页小小的甜，偷偷提醒我们别忘记。',
+                tone: '小纪念'
+            },
+            {
+                id: 'valentine-214',
+                type: 'solarYearly',
+                repeat: 'solar-yearly',
+                title: '214情人节',
+                monthDay: '02-14',
+                date: '2026-02-14',
+                tagline: '情人节这一天，想把日历上的爱心都贴给你。',
+                tone: '情人节'
+            },
+            {
+                id: 'love-520',
+                type: 'solarYearly',
+                repeat: 'solar-yearly',
+                title: '520',
+                monthDay: '05-20',
+                date: '2026-05-20',
+                tagline: '520 这三个数字太会说话，那就让它替我再说一遍。',
+                tone: '520'
+            },
+            {
+                id: 'qixi',
+                type: 'lunarFestival',
+                repeat: 'lunar-yearly',
+                title: '七夕',
+                lunar: { month: 7, day: 7 },
+                lunarLabel: '农历七月初七',
+                tagline: '农历七月初七，星河也像在替我们记下一页。',
+                tone: '七夕'
+            },
+            {
+                id: 'together-100',
+                title: '在一起100天',
+                date: '2026-05-10',
+                tagline: '第 100 天也只是开头，后面还有好多好多页。',
+                tone: '百天'
+            },
+            {
+                id: 'together-365',
+                title: '在一起365天',
+                date: '2027-01-30',
+                tagline: '一整圈四季走完，还是想牵着你继续往前。',
+                tone: '一年'
+            },
+            {
+                id: 'together-520',
+                title: '在一起520天',
+                date: '2027-07-04',
+                tagline: '数字刚好会说话，那我就借它再说一遍爱你。',
+                tone: '520'
+            },
+            {
+                id: 'together-1000',
+                title: '在一起1000天',
+                date: '2028-10-26',
+                tagline: '一千天以后，日历翻旧了，喜欢还是新的。',
+                tone: '千天'
+            },
+            {
+                id: 'jiaojiao-birthday',
+                type: 'lunarBirthday',
+                repeat: 'lunar-yearly',
+                title: '娇娇生日',
+                lunarSource: '1999.0902',
+                lunar: { year: 1999, month: 9, day: 2 },
+                lunarBirthday: '农历九月初二',
+                lunarLabel: '农历九月初二',
+                tagline: '1999 年农历九月初二，世界迎来了娇娇。这一页每年都要好好记住。',
+                tone: '生日'
+            },
+            {
+                id: 'junjun-birthday',
+                type: 'lunarBirthday',
+                repeat: 'lunar-yearly',
+                title: '俊俊生日',
+                lunarSource: '1999.0320',
+                lunar: { year: 1999, month: 3, day: 20 },
+                lunarBirthday: '农历三月二十',
+                lunarLabel: '农历三月二十',
+                tagline: '1999 年农历三月二十，世界迎来了俊俊。这一页也要一起收好。',
+                tone: '生日'
+            }
+        ];
+
+        const ANNIVERSARIES = [
+            ...BASE_ANNIVERSARIES,
+            ...generateMonthlyAnniversaries(TOGETHER_START, 24)
+        ];
+
+        const calendarCard = document.getElementById('calendarCard');
+        const dateDay = document.getElementById('dateDay');
+        const dateMonth = document.getElementById('dateMonth');
+        const dateYear = document.getElementById('dateYear');
+        const dateLunar = document.getElementById('dateLunar');
+        const anniversaryTitle = document.getElementById('anniversaryTitle');
+        const anniversaryStatus = document.getElementById('anniversaryStatus');
+        const anniversaryCopy = document.getElementById('anniversaryCopy');
+        const calendarNote = document.getElementById('calendarNote');
+        const anniversaryDots = document.getElementById('anniversaryDots');
+        const prevButton = document.getElementById('prevButton');
+        const nextButton = document.getElementById('nextButton');
+
+        let currentIndex = 0;
+        let timelineAnniversaries = [];
+
+        function parseLocalDate(dateText) {
+            const [year, month, day] = dateText.split('-').map(Number);
+            return new Date(year, month - 1, day);
+        }
+
+        function formatDateText(date) {
+            return [
+                date.getFullYear(),
+                String(date.getMonth() + 1).padStart(2, '0'),
+                String(date.getDate()).padStart(2, '0')
+            ].join('-');
+        }
+
+        function formatNumericDate(date) {
+            return [
+                date.getFullYear(),
+                String(date.getMonth() + 1).padStart(2, '0'),
+                String(date.getDate()).padStart(2, '0')
+            ].join('.');
+        }
+
+        function getLunarParts(date) {
+            const formatter = new Intl.DateTimeFormat('zh-CN-u-ca-chinese', {
+                year: 'numeric',
+                month: 'numeric',
+                day: 'numeric'
+            });
+            return Object.fromEntries(
+                formatter
+                    .formatToParts(date)
+                    .filter((part) => part.type !== 'literal')
+                    .map((part) => [part.type, part.value])
+            );
+        }
+
+        function formatLunarDay(day) {
+            const dayNames = [
+                '',
+                '初一', '初二', '初三', '初四', '初五', '初六', '初七', '初八', '初九', '初十',
+                '十一', '十二', '十三', '十四', '十五', '十六', '十七', '十八', '十九', '二十',
+                '廿一', '廿二', '廿三', '廿四', '廿五', '廿六', '廿七', '廿八', '廿九', '三十'
+            ];
+            return dayNames[Number(day)] || String(day);
+        }
+
+        function getLunarTextFromSolar(date) {
+            const parts = getLunarParts(date);
+            return `农历${parts.month}${formatLunarDay(parts.day)}`;
+        }
+
+        function formatLunarLabel(anniversary, date) {
+            if (anniversary.lunarLabel) {
+                return anniversary.lunarLabel;
+            }
+
+            return getLunarTextFromSolar(date);
+        }
+
+        function addClampedMonths(date, monthOffset) {
+            const year = date.getFullYear();
+            const month = date.getMonth() + monthOffset;
+            const targetMonthLastDay = new Date(year, month + 1, 0).getDate();
+            const day = Math.min(date.getDate(), targetMonthLastDay);
+            return new Date(year, month, day);
+        }
+
+        function generateMonthlyAnniversaries(startDateText, monthCount) {
+            const startDate = parseLocalDate(startDateText);
+
+            return Array.from({ length: monthCount }, (_, index) => {
+                const monthNumber = index + 1;
+                const date = addClampedMonths(startDate, monthNumber);
+
+                return {
+                    id: `together-month-${monthNumber}`,
+                    title: `在一起${monthNumber}个月`,
+                    date: formatDateText(date),
+                    tagline: `这是我们在一起的第 ${monthNumber} 个整月，下一页也要一起翻。`,
+                    tone: `${monthNumber}个月`
+                };
+            });
+        }
+
+        function startOfLocalDay(date) {
+            return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        }
+
+        function getDayDistance(fromDate, toDate) {
+            const dayMs = 24 * 60 * 60 * 1000;
+            return Math.round((startOfLocalDay(toDate) - startOfLocalDay(fromDate)) / dayMs);
+        }
+
+        function getSolarYearlyDate(monthDay, year) {
+            const [month, day] = monthDay.split('-').map(Number);
+            return new Date(year, month - 1, day);
+        }
+
+        function getSolarDateFromLunar(year, lunarMonth, lunarDay) {
+            const key = `${year}-${String(lunarMonth).padStart(2, '0')}-${String(lunarDay).padStart(2, '0')}`;
+            const mappedDate = lunarYearlyDates[key];
+
+            if (mappedDate) {
+                return parseLocalDate(mappedDate);
+            }
+
+            for (let date = new Date(year, 0, 1); date.getFullYear() === year; date.setDate(date.getDate() + 1)) {
+                const parts = getLunarParts(date);
+                const monthName = parts.month.replace(/^闰/, '');
+                const monthMap = {
+                    '正月': 1,
+                    '二月': 2,
+                    '三月': 3,
+                    '四月': 4,
+                    '五月': 5,
+                    '六月': 6,
+                    '七月': 7,
+                    '八月': 8,
+                    '九月': 9,
+                    '十月': 10,
+                    '冬月': 11,
+                    '腊月': 12
+                };
+
+                if (monthMap[monthName] === lunarMonth && Number(parts.day) === lunarDay) {
+                    return startOfLocalDay(date);
+                }
+            }
+
+            return new Date(year, lunarMonth - 1, lunarDay);
+        }
+
+        function getYearlyCandidateDate(anniversary, year) {
+            if (anniversary.repeat === 'lunar-yearly') {
+                return getSolarDateFromLunar(year, anniversary.lunar.month, anniversary.lunar.day);
+            }
+
+            return getSolarYearlyDate(anniversary.monthDay, year);
+        }
+
+        function getDisplayDateForAnniversary(anniversary, today = new Date()) {
+            if (!anniversary.repeat) {
+                return parseLocalDate(anniversary.date);
+            }
+
+            const candidateYears = [
+                today.getFullYear() - 1,
+                today.getFullYear(),
+                today.getFullYear() + 1
+            ];
+            let bestDate = getYearlyCandidateDate(anniversary, candidateYears[0]);
+            let bestDistance = Math.abs(getDayDistance(today, bestDate));
+
+            candidateYears.slice(1).forEach((year) => {
+                const candidateDate = getYearlyCandidateDate(anniversary, year);
+                const distance = Math.abs(getDayDistance(today, candidateDate));
+
+                if (
+                    distance < bestDistance ||
+                    (distance === bestDistance && candidateDate >= startOfLocalDay(today))
+                ) {
+                    bestDate = candidateDate;
+                    bestDistance = distance;
+                }
+            });
+
+            return bestDate;
+        }
+
+        function getNearestAnniversaryIndex(today, anniversaries) {
+            const todayStart = startOfLocalDay(today);
+            let bestIndex = 0;
+            let bestDistance = Infinity;
+            let bestIsFuture = false;
+
+            anniversaries.forEach((anniversary, index) => {
+                const date = getDisplayDateForAnniversary(anniversary, todayStart);
+                const signedDistance = getDayDistance(todayStart, date);
+                const distance = Math.abs(signedDistance);
+                const isFuture = date >= todayStart;
+
+                if (
+                    distance < bestDistance ||
+                    (distance === bestDistance && date >= todayStart && !bestIsFuture)
+                ) {
+                    bestIndex = index;
+                    bestDistance = distance;
+                    bestIsFuture = isFuture;
+                }
+            });
+
+            return bestIndex;
+        }
+
+        function getTimelineAnniversaries(anniversaries, today) {
+            return [...anniversaries].sort((left, right) => {
+                const leftDate = getDisplayDateForAnniversary(left, today);
+                const rightDate = getDisplayDateForAnniversary(right, today);
+                return leftDate - rightDate;
+            });
+        }
+
+        function getStatusText(date) {
+            const distance = getDayDistance(new Date(), date);
+
+            if (distance === 0) {
+                return '今天就是这一页纪念日';
+            }
+
+            if (distance > 0) {
+                return `还有 ${distance} 天翻到这一页`;
+            }
+
+            return `这一页已经珍藏 ${Math.abs(distance)} 天`;
+        }
+
+        function renderDots() {
+            anniversaryDots.innerHTML = '';
+
+            timelineAnniversaries.forEach((anniversary, index) => {
+                const dot = document.createElement('button');
+                dot.className = `anniversary-dot${index === currentIndex ? ' active' : ''}`;
+                dot.type = 'button';
+                dot.setAttribute('aria-label', `查看${anniversary.title}`);
+                dot.addEventListener('click', () => showAnniversary(index, 'jump'));
+                anniversaryDots.appendChild(dot);
+            });
+        }
+
+        function showAnniversary(index, direction = 'next') {
+            currentIndex = index;
+            const anniversary = timelineAnniversaries[currentIndex];
+            const date = getDisplayDateForAnniversary(anniversary);
+
+            calendarCard.classList.remove('is-scaling', 'is-flipping');
+            void calendarCard.offsetWidth;
+            calendarCard.dataset.direction = direction;
+            calendarCard.classList.add('is-scaling');
+            calendarCard.classList.add('is-flipping');
+
+            dateDay.textContent = formatNumericDate(date);
+            dateMonth.textContent = anniversary.tone;
+            dateYear.textContent = '我们的纪念日';
+            dateLunar.textContent = formatLunarLabel(anniversary, date);
+            anniversaryTitle.textContent = anniversary.title;
+            anniversaryStatus.textContent = getStatusText(date);
+            anniversaryCopy.textContent = anniversary.tagline;
+            calendarNote.innerHTML = `${anniversary.tone}<br>这一页`;
+
+            renderDots();
+        }
+
+        function prevAnniversary() {
+            const nextIndex = (currentIndex - 1 + timelineAnniversaries.length) % timelineAnniversaries.length;
+            showAnniversary(nextIndex, 'prev');
+        }
+
+        function nextAnniversary() {
+            const nextIndex = (currentIndex + 1) % timelineAnniversaries.length;
+            showAnniversary(nextIndex, 'next');
+        }
+
+        function initCalendar() {
+            timelineAnniversaries = getTimelineAnniversaries(ANNIVERSARIES, new Date());
+            currentIndex = getNearestAnniversaryIndex(new Date(), timelineAnniversaries);
+            showAnniversary(currentIndex, 'initial');
+        }
+
+        prevButton.addEventListener('click', prevAnniversary);
+        nextButton.addEventListener('click', nextAnniversary);
+        calendarCard.addEventListener('animationend', () => {
+            calendarCard.classList.remove('is-scaling');
+            calendarCard.classList.remove('is-flipping');
+        });
+
+        initCalendar();
+    </script>
+</body>
+</html>

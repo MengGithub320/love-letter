@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="520，我们的小纪念">
+    <title>520 · 我们的小纪念</title>
+
+    <meta property="og:title" content="520 · 我们的小纪念">
+    <meta property="og:description" content="把今天点亮，送给最喜欢的你">
+    <meta property="og:image" content="">
+    <meta property="og:url" content="">
+    <meta property="og:type" content="website">
+
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html,
+        body {
+            width: 100%;
+            min-height: 100%;
+        }
+
+        body {
+            min-height: 100vh;
+            min-height: 100dvh;
+            overflow-x: hidden;
+            overflow-y: auto;
+            background: linear-gradient(135deg, #ff6b6b 0%, #feca57 50%, #ff9ff3 100%);
+            color: #422433;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", sans-serif;
+        }
+
+        .hearts-container {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .floating-heart {
+            position: absolute;
+            bottom: -40px;
+            color: rgba(255, 255, 255, 0.66);
+            font-size: var(--heart-size, 20px);
+            text-shadow: 0 0 12px rgba(238, 90, 111, 0.38);
+            animation: float-up var(--heart-duration, 9s) linear var(--heart-delay, 0s) infinite;
+        }
+
+        @keyframes float-up {
+            0% {
+                transform: translateY(0) rotate(0deg) scale(0.72);
+                opacity: 0;
+            }
+            12% {
+                opacity: 1;
+            }
+            86% {
+                opacity: 0.92;
+            }
+            100% {
+                transform: translateY(-112vh) rotate(360deg) scale(1.16);
+                opacity: 0;
+            }
+        }
+
+        .page {
+            position: relative;
+            z-index: 1;
+            width: min(100%, 430px);
+            min-height: 100vh;
+            min-height: 100dvh;
+            margin: 0 auto;
+            padding: max(30px, env(safe-area-inset-top)) 20px max(28px, env(safe-area-inset-bottom));
+            display: flex;
+            align-items: center;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        .memory-card {
+            position: relative;
+            width: 100%;
+            padding: 26px 22px 22px;
+            border: 3px solid rgba(255, 255, 255, 0.76);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.93);
+            box-shadow: 0 26px 74px rgba(126, 38, 71, 0.28);
+            overflow: hidden;
+            transition: transform 0.42s ease, box-shadow 0.42s ease;
+        }
+
+        .memory-card.is-lit {
+            transform: translateY(-4px) scale(1.012);
+            box-shadow: 0 34px 86px rgba(126, 38, 71, 0.36);
+        }
+
+        .memory-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 18% 10%, rgba(255, 214, 94, 0.28), transparent 24%),
+                radial-gradient(circle at 84% 18%, rgba(255, 111, 145, 0.18), transparent 22%),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.62), rgba(255, 246, 250, 0.88));
+            pointer-events: none;
+        }
+
+        .card-inner {
+            position: relative;
+            z-index: 1;
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .kicker {
+            display: inline-flex;
+            align-self: flex-start;
+            min-height: 28px;
+            padding: 0 12px;
+            align-items: center;
+            border-radius: 999px;
+            background: #fff0f5;
+            color: #b93457;
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: 0;
+            box-shadow: inset 0 0 0 1px rgba(238, 90, 111, 0.16);
+        }
+
+        .hero {
+            text-align: center;
+            padding: 10px 0 2px;
+        }
+
+        .hero-number {
+            display: block;
+            color: #ee5a6f;
+            font-size: 78px;
+            font-weight: 1000;
+            line-height: 0.96;
+            letter-spacing: 0;
+            text-shadow: 0 6px 0 rgba(254, 202, 87, 0.48);
+        }
+
+        .hero-title {
+            margin-top: 12px;
+            color: #3e2430;
+            font-size: 25px;
+            font-weight: 950;
+            line-height: 1.25;
+            letter-spacing: 0;
+        }
+
+        .hero-copy {
+            margin: 12px auto 0;
+            max-width: 286px;
+            color: #6d4a57;
+            font-size: 15px;
+            font-weight: 650;
+            line-height: 1.78;
+        }
+
+        .memory-strip {
+            display: grid;
+            gap: 10px;
+        }
+
+        .memory-note {
+            position: relative;
+            min-height: 66px;
+            padding: 14px 15px 13px 50px;
+            border: 1px solid rgba(238, 90, 111, 0.15);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.78);
+            color: #553341;
+            box-shadow: 0 10px 26px rgba(238, 90, 111, 0.12);
+        }
+
+        .memory-note::before {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: #ffedf3;
+            color: #ee5a6f;
+            font-size: 13px;
+            font-weight: 900;
+        }
+
+        .memory-note:nth-child(1)::before { content: "1"; }
+        .memory-note:nth-child(2)::before { content: "2"; }
+        .memory-note:nth-child(3)::before { content: "3"; }
+
+        .memory-note h2 {
+            color: #d94965;
+            font-size: 14px;
+            font-weight: 900;
+            line-height: 1.25;
+        }
+
+        .memory-note p {
+            margin-top: 5px;
+            font-size: 13px;
+            font-weight: 650;
+            line-height: 1.62;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #3e2430;
+            font-size: 15px;
+            font-weight: 950;
+            line-height: 1.35;
+        }
+
+        .section-title::before {
+            content: "";
+            width: 8px;
+            height: 18px;
+            border-radius: 999px;
+            background: linear-gradient(180deg, #ff6b6b, #feca57);
+            flex: 0 0 auto;
+        }
+
+        .ritual-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .ritual-item,
+        .wish-item {
+            border: 1px solid rgba(238, 90, 111, 0.14);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.74);
+            box-shadow: 0 8px 22px rgba(238, 90, 111, 0.1);
+        }
+
+        .ritual-item {
+            min-height: 74px;
+            padding: 12px;
+        }
+
+        .ritual-item strong,
+        .wish-item strong {
+            display: block;
+            color: #c13a5b;
+            font-size: 13px;
+            font-weight: 950;
+            line-height: 1.35;
+        }
+
+        .ritual-item span,
+        .wish-item span {
+            display: block;
+            margin-top: 5px;
+            color: #654251;
+            font-size: 12px;
+            font-weight: 650;
+            line-height: 1.55;
+        }
+
+        .timeline {
+            position: relative;
+            display: grid;
+            gap: 10px;
+            padding-left: 18px;
+        }
+
+        .timeline::before {
+            content: "";
+            position: absolute;
+            left: 5px;
+            top: 8px;
+            bottom: 8px;
+            width: 2px;
+            border-radius: 999px;
+            background: rgba(238, 90, 111, 0.22);
+        }
+
+        .timeline-item {
+            position: relative;
+            display: grid;
+            grid-template-columns: 54px 1fr;
+            gap: 10px;
+            align-items: start;
+            padding: 11px 12px;
+            border-radius: 8px;
+            background: rgba(255, 247, 250, 0.82);
+            border: 1px solid rgba(238, 90, 111, 0.12);
+        }
+
+        .timeline-item::before {
+            content: "";
+            position: absolute;
+            left: -17px;
+            top: 17px;
+            width: 10px;
+            height: 10px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            background: #ee5a6f;
+            box-shadow: 0 0 0 3px rgba(238, 90, 111, 0.16);
+        }
+
+        .timeline-time {
+            color: #b93457;
+            font-size: 12px;
+            font-weight: 950;
+            line-height: 1.4;
+        }
+
+        .timeline-copy {
+            color: #5b3948;
+            font-size: 12px;
+            font-weight: 650;
+            line-height: 1.58;
+        }
+
+        .wish-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .wish-item {
+            padding: 12px 13px;
+        }
+
+        .promise-panel {
+            padding: 16px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.12), rgba(254, 202, 87, 0.18));
+            color: #4e2f3d;
+            text-align: center;
+        }
+
+        .promise-panel strong {
+            display: block;
+            color: #b93457;
+            font-size: 16px;
+            font-weight: 950;
+            line-height: 1.45;
+        }
+
+        .promise-panel span {
+            display: block;
+            margin-top: 7px;
+            font-size: 13px;
+            font-weight: 650;
+            line-height: 1.66;
+        }
+
+        .action-row {
+            margin-top: auto;
+            display: grid;
+            gap: 10px;
+        }
+
+        .love-button {
+            width: 100%;
+            min-height: 48px;
+            border: 0;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            color: #fff;
+            font: 900 15px/1 -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif;
+            box-shadow: 0 12px 30px rgba(238, 90, 111, 0.32);
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .love-button:active {
+            transform: scale(0.98);
+        }
+
+        .secret-line {
+            min-height: 22px;
+            color: #b93457;
+            font-size: 13px;
+            font-weight: 800;
+            line-height: 1.55;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(4px);
+            transition: opacity 0.32s ease, transform 0.32s ease;
+        }
+
+        .secret-line.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .celebration-heart {
+            position: fixed;
+            z-index: 8;
+            left: var(--burst-left);
+            top: var(--burst-top);
+            color: #fff;
+            font-size: var(--burst-size);
+            pointer-events: none;
+            text-shadow: 0 0 14px rgba(238, 90, 111, 0.45);
+            animation: burst-heart 1.3s ease-out forwards;
+        }
+
+        @keyframes burst-heart {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.45);
+            }
+            18% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translate(calc(-50% + var(--burst-x)), calc(-50% + var(--burst-y))) scale(1.3) rotate(var(--burst-rotate));
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page {
+                padding: max(22px, env(safe-area-inset-top)) 16px max(22px, env(safe-area-inset-bottom));
+            }
+
+            .memory-card {
+                padding: 22px 18px 18px;
+            }
+
+            .hero-number {
+                font-size: 68px;
+            }
+
+            .hero-title {
+                font-size: 22px;
+            }
+
+            .hero-copy {
+                font-size: 14px;
+            }
+
+            .ritual-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline-item {
+                grid-template-columns: 48px 1fr;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .page {
+                padding-left: 12px;
+                padding-right: 12px;
+            }
+
+            .memory-card {
+                padding: 18px 14px 15px;
+            }
+
+            .hero-number {
+                font-size: 58px;
+            }
+
+            .hero-title {
+                font-size: 20px;
+            }
+
+            .memory-note {
+                padding-left: 46px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hearts-container" id="heartsContainer" aria-hidden="true"></div>
+
+    <main class="page">
+        <section class="memory-card" id="memoryCard" aria-label="520 情侣纪念卡片">
+            <div class="card-inner">
+                <span class="kicker">FOR OUR 520</span>
+
+                <header class="hero">
+                    <span class="hero-number">520</span>
+                    <h1 class="hero-title">我们的小纪念</h1>
+                    <p class="hero-copy">把今天留给你，也把往后的每一天慢慢交给你。</p>
+                </header>
+
+                <div class="memory-strip" aria-label="情侣纪念短句">
+                    <article class="memory-note">
+                        <h2>见到你的时候</h2>
+                        <p>世界会自动变轻一点，连风都像在替我说喜欢。</p>
+                    </article>
+                    <article class="memory-note">
+                        <h2>想你的时候</h2>
+                        <p>普通的一天也会冒出小小的光，提醒我心里有你。</p>
+                    </article>
+                    <article class="memory-note">
+                        <h2>爱你的时候</h2>
+                        <p>不是只在 520，而是醒来、路过、睡前，都还是你。</p>
+                    </article>
+                </div>
+
+                <section class="ritual-section" aria-label="今日仪式感">
+                    <h2 class="section-title">今日仪式感</h2>
+                    <div class="ritual-grid">
+                        <div class="ritual-item">
+                            <strong>一封小情书</strong>
+                            <span>把想说的话认真放进今天，不让它只是普通日期。</span>
+                        </div>
+                        <div class="ritual-item">
+                            <strong>一次认真拥抱</strong>
+                            <span>见面就抱紧一点，没见面就把想念说清楚。</span>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="timeline-section" aria-label="520 时间线">
+                    <h2 class="section-title">520 时间线</h2>
+                    <div class="timeline">
+                        <article class="timeline-item">
+                            <span class="timeline-time">08:20</span>
+                            <p class="timeline-copy">醒来第一件事，是把今天的喜欢发给你。</p>
+                        </article>
+                        <article class="timeline-item">
+                            <span class="timeline-time">13:14</span>
+                            <p class="timeline-copy">想认真记住，爱你不是一阵子，是一天天。</p>
+                        </article>
+                        <article class="timeline-item">
+                            <span class="timeline-time">17:20</span>
+                            <p class="timeline-copy">把路过的云、风和晚霞，都偷偷寄给你。</p>
+                        </article>
+                        <article class="timeline-item">
+                            <span class="timeline-time">22:00</span>
+                            <p class="timeline-copy">睡前再说一次：今天也最喜欢你。</p>
+                        </article>
+                    </div>
+                </section>
+
+                <section class="wish-section" aria-label="喜欢清单">
+                    <h2 class="section-title">喜欢清单</h2>
+                    <div class="wish-list">
+                        <div class="wish-item">
+                            <strong>喜欢你的可爱</strong>
+                            <span>连小脾气都像在提醒我，要更温柔地靠近你。</span>
+                        </div>
+                        <div class="wish-item">
+                            <strong>喜欢我们的以后</strong>
+                            <span>想一起吃很多顿饭，看很多次日落，过很多个 520。</span>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="promise-panel" aria-live="polite">
+                    <strong>今天的答案是：我爱你。</strong>
+                    <span id="secretLine" class="secret-line">以后每一个 520，都想和你一起数。</span>
+                </div>
+
+                <div class="action-row">
+                    <button class="love-button" id="loveButton" type="button">点亮今天</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const heartsContainer = document.getElementById('heartsContainer');
+        const memoryCard = document.getElementById('memoryCard');
+        const loveButton = document.getElementById('loveButton');
+        const secretLine = document.getElementById('secretLine');
+        const HEARTS = ['❤', '♡', '♥'];
+        const LOVE_MESSAGES = [
+            '以后每一个 520，都想和你一起数。',
+            '今天的喜欢不打烊，明天也继续偏向你。',
+            '想把所有小确幸都攒起来，慢慢送到你手里。',
+            '如果快乐有名字，那我会先想到你。',
+            '这一天被点亮很多次，都是因为你值得。',
+            '我会记得你的可爱，也认真接住你的不开心。',
+            '下一次心动不用等节日，因为见到你就算。',
+            '愿我们把普通日子，也过成彼此的小纪念。'
+        ];
+        let loveMessageIndex = 0;
+
+        function randomBetween(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        function createFloatingHeart(index) {
+            const heart = document.createElement('span');
+            heart.className = 'floating-heart';
+            heart.textContent = HEARTS[index % HEARTS.length];
+            heart.style.left = `${randomBetween(2, 94)}%`;
+            heart.style.setProperty('--heart-size', `${randomBetween(14, 28)}px`);
+            heart.style.setProperty('--heart-duration', `${randomBetween(7, 13)}s`);
+            heart.style.setProperty('--heart-delay', `${randomBetween(0, 8)}s`);
+            heartsContainer.appendChild(heart);
+        }
+
+        function createCelebrationHeart(originX, originY) {
+            const heart = document.createElement('span');
+            heart.className = 'celebration-heart';
+            heart.textContent = HEARTS[Math.floor(Math.random() * HEARTS.length)];
+            heart.style.setProperty('--burst-left', `${originX}px`);
+            heart.style.setProperty('--burst-top', `${originY}px`);
+            heart.style.setProperty('--burst-size', `${randomBetween(18, 30)}px`);
+            heart.style.setProperty('--burst-x', `${randomBetween(-92, 92)}px`);
+            heart.style.setProperty('--burst-y', `${randomBetween(-132, -52)}px`);
+            heart.style.setProperty('--burst-rotate', `${randomBetween(-34, 34)}deg`);
+            document.body.appendChild(heart);
+            heart.addEventListener('animationend', () => heart.remove());
+        }
+
+        function lightToday(event) {
+            const rect = event.currentTarget.getBoundingClientRect();
+            const originX = rect.left + rect.width / 2;
+            const originY = rect.top + rect.height / 2;
+
+            memoryCard.classList.add('is-lit');
+            secretLine.textContent = LOVE_MESSAGES[loveMessageIndex];
+            secretLine.classList.add('show');
+            loveMessageIndex = (loveMessageIndex + 1) % LOVE_MESSAGES.length;
+            loveButton.textContent = loveMessageIndex === 0 ? '再点亮一轮' : '继续点亮今天';
+
+            for (let index = 0; index < 16; index += 1) {
+                setTimeout(() => createCelebrationHeart(originX, originY), index * 36);
+            }
+        }
+
+        for (let index = 0; index < 24; index += 1) {
+            createFloatingHeart(index);
+        }
+
+        loveButton.addEventListener('click', lightToday);
+    </script>
+</body>
+</html>

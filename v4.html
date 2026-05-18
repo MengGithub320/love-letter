@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="满屏星星闪烁，藏着给宝贝的一句话">
+    <title>✨ 给宝贝的一句话</title>
+
+    <meta property="og:title" content="✨ 给宝贝的一句话">
+    <meta property="og:description" content="每一颗星星都藏着想你和爱你 💕">
+    <meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/lC4pRubianpicD7GiciaibDvic8YQ/0">
+    <meta property="og:url" content="">
+    <meta property="og:type" content="website">
+
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif;
+            background: linear-gradient(135deg, #ff6b6b 0%, #feca57 50%, #ff9ff3 100%);
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .stars-field {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .twinkle-star {
+            position: absolute;
+            left: var(--star-left);
+            top: var(--star-top);
+            width: var(--star-size);
+            height: var(--star-size);
+            animation: star-twinkle var(--twinkle-duration) ease-in-out var(--twinkle-delay) infinite alternate;
+            transform: translate(-50%, -50%) scale(var(--star-scale));
+            will-change: transform, opacity;
+        }
+
+        .star-core,
+        .star-halo,
+        .star-cross-glow,
+        .star-trail,
+        .star-pulse {
+            position: absolute;
+            pointer-events: none;
+        }
+
+        .star-core,
+        .star-halo,
+        .star-cross-glow {
+            inset: 0;
+        }
+
+        .star-core {
+            background:
+                radial-gradient(circle, #fff 0 15%, rgba(255,255,255,0.96) 28%, var(--star-color) 56%, rgba(255,255,255,0.1) 76%),
+                linear-gradient(180deg, rgba(255,255,255,0.98), var(--star-color));
+            clip-path: polygon(50% 0%, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0% 50%, 40% 40%);
+            filter: drop-shadow(0 0 4px var(--star-color)) drop-shadow(0 0 10px var(--star-glow));
+        }
+
+        .star-core::before,
+        .star-core::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: calc(var(--star-size) * 3.2);
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.82), transparent);
+            transform: translate(-50%, -50%);
+            filter: drop-shadow(0 0 4px var(--star-glow));
+        }
+
+        .star-core::after {
+            width: 1px;
+            height: calc(var(--star-size) * 3.8);
+        }
+
+        .star-cross-glow {
+            inset: calc(var(--star-size) * -1.15);
+            opacity: 0.66;
+            filter: blur(0.2px) drop-shadow(0 0 10px var(--star-glow));
+        }
+
+        .star-cross-glow::before,
+        .star-cross-glow::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            border-radius: 999px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.78), var(--star-color), rgba(255,255,255,0.56), transparent);
+            transform: translate(-50%, -50%);
+        }
+
+        .star-cross-glow::before {
+            width: calc(var(--star-size) * 4.9);
+            height: 1px;
+        }
+
+        .star-cross-glow::after {
+            width: 1px;
+            height: calc(var(--star-size) * 5.8);
+            background: linear-gradient(180deg, transparent, rgba(255,255,255,0.78), var(--star-color), rgba(255,255,255,0.56), transparent);
+        }
+
+        .star-halo {
+            inset: calc(var(--star-size) * -0.95);
+            background: radial-gradient(circle, var(--star-glow), rgba(255,255,255,0) 62%);
+            border-radius: 50%;
+            opacity: 0.48;
+        }
+
+        .star-trail {
+            left: 50%;
+            top: 50%;
+            width: 0;
+            height: 0;
+            filter: blur(2.4px);
+            opacity: 0;
+            transform: rotate(var(--trail-angle, 0rad));
+            transform-origin: center center;
+        }
+
+        .star-trail::before {
+            content: '';
+            position: absolute;
+            right: calc(var(--star-size) * 0.9);
+            top: 50%;
+            width: calc(var(--star-size) * 14);
+            height: calc(var(--star-size) * 0.82);
+            background:
+                radial-gradient(circle at 100% 50%, rgba(255,255,255,0.95), transparent 18%),
+                linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.18) 34%, var(--star-glow) 72%, var(--star-color) 100%);
+            border-radius: 999px;
+            transform: translateY(-50%) scaleX(0.12);
+            transform-origin: right center;
+        }
+
+        .star-pulse {
+            inset: calc(var(--star-size) * -2.2);
+            border: 1px solid var(--star-color);
+            border-radius: 50%;
+            box-shadow: 0 0 12px var(--star-glow), inset 0 0 12px var(--star-glow);
+            opacity: 0;
+            transform: scale(0.24);
+        }
+
+        .twinkle-star.moving-to-center {
+            z-index: 30;
+            animation: star-to-center 1.35s cubic-bezier(.16, .9, .2, 1) forwards;
+        }
+
+        .twinkle-star.moving-to-center .star-trail {
+            animation: star-trail-flare 1.35s ease-out forwards;
+        }
+
+        .twinkle-star.moving-to-center .star-trail::before {
+            animation: star-trail-stretch 1.35s ease-out forwards;
+        }
+
+        .twinkle-star.moving-to-center .star-pulse {
+            animation: star-center-burst 1.35s ease-out forwards;
+        }
+
+        @keyframes star-twinkle {
+            0% {
+                opacity: 0.68;
+                filter: brightness(1.02) saturate(1);
+            }
+            100% {
+                opacity: 0.92;
+                filter: brightness(1.16) saturate(1.08);
+            }
+        }
+
+        @keyframes star-to-center {
+            0% {
+                left: var(--from-left);
+                top: var(--from-top);
+                transform: translate(-50%, -50%) scale(var(--star-scale));
+                filter: brightness(1);
+                opacity: 1;
+            }
+            36% {
+                transform: translate(-50%, -50%) scale(1.35);
+                filter: brightness(1.18);
+            }
+            72% {
+                transform: translate(-50%, -50%) scale(1.82);
+                filter: brightness(1.38);
+            }
+            100% {
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%) scale(2.25);
+                filter: brightness(1.7);
+                opacity: 1;
+            }
+        }
+
+        @keyframes star-trail-flare {
+            0% {
+                opacity: 0;
+            }
+            16% {
+                opacity: 0.98;
+            }
+            72% {
+                opacity: 0.84;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+
+        @keyframes star-trail-stretch {
+            0% {
+                transform: translateY(-50%) scaleX(0.12);
+            }
+            16% {
+                transform: translateY(-50%) scaleX(1);
+            }
+            72% {
+                transform: translateY(-50%) scaleX(1.08);
+            }
+            100% {
+                transform: translateY(-50%) scaleX(0.36);
+            }
+        }
+
+        @keyframes star-center-burst {
+            0%, 76% {
+                opacity: 0;
+                transform: scale(0.24);
+            }
+            90% {
+                opacity: 0.55;
+                transform: scale(0.82);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(1.15);
+            }
+        }
+
+        .page {
+            position: relative;
+            z-index: 2;
+            min-height: 100vh;
+            padding: max(24px, env(safe-area-inset-top)) 18px 38px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            pointer-events: none;
+        }
+
+        .page-title {
+            margin-top: 18px;
+            text-align: center;
+            color: white;
+            text-shadow: 0 4px 18px rgba(238, 90, 111, 0.42);
+            opacity: 0.92;
+        }
+
+        .page-title h1 {
+            font-size: 32px;
+            line-height: 1.25;
+            font-weight: 900;
+        }
+
+        .page-title p {
+            margin-top: 10px;
+            font-size: 14px;
+            line-height: 1.8;
+            font-weight: 800;
+        }
+
+        .blessing-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 20;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(83, 26, 46, 0.34);
+            backdrop-filter: blur(8px);
+            opacity: 0;
+            transition: opacity 360ms ease;
+        }
+
+        .blessing-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .blessing-modal.leaving {
+            opacity: 0;
+        }
+
+        .blessing-card {
+            width: min(90vw, 420px);
+            padding: 28px 24px 24px;
+            border: 2px solid rgba(255, 255, 255, 0.76);
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #ee5a6f;
+            text-align: center;
+            box-shadow: 0 24px 60px rgba(143, 39, 71, 0.26);
+        }
+
+        .blessing-card h2 {
+            font-size: 24px;
+            line-height: 1.35;
+            font-weight: 900;
+            margin-bottom: 14px;
+        }
+
+        .blessing-text {
+            min-height: 96px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 17px;
+            line-height: 1.8;
+            font-weight: 800;
+        }
+
+        .close-button {
+            margin-top: 20px;
+            width: 100%;
+            min-height: 46px;
+            border: 0;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #ff6b6b, #ff9ff3);
+            color: white;
+            font-size: 15px;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 10px 24px rgba(238, 90, 111, 0.28);
+        }
+
+        @media (max-width: 480px) {
+            .page {
+                padding: 52px 14px 30px;
+            }
+
+            .page-title h1 {
+                font-size: 26px;
+            }
+
+            .page-title p {
+                font-size: 13px;
+                line-height: 1.7;
+            }
+
+            .blessing-card {
+                padding: 24px 20px 20px;
+                border-radius: 20px;
+            }
+
+            .blessing-card h2 {
+                font-size: 21px;
+            }
+
+            .blessing-text {
+                font-size: 15px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .page {
+                padding: 50px 12px 24px;
+            }
+
+            .page-title h1 {
+                font-size: 22px;
+            }
+
+            .page-title p {
+                font-size: 12px;
+            }
+
+            .twinkle-star.moving-to-center {
+                animation-duration: 1s;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="stars-field" id="starsField" aria-label="满屏闪烁的星星"></section>
+
+    <main class="page">
+        <header class="page-title">
+            <h1>给宝贝的一句话</h1>
+            <p>星星一闪一闪，都是我偷偷藏好的想念。</p>
+        </header>
+    </main>
+
+    <div class="blessing-modal active" id="initialBlessingModal" role="dialog" aria-modal="true" aria-labelledby="initialBlessingTitle">
+        <div class="blessing-card">
+            <h2 id="initialBlessingTitle">给宝贝的一句话</h2>
+            <p class="blessing-text" id="initialBlessingText">宝贝，今天也想把所有温柔都给你。</p>
+            <button class="close-button" id="closeInitialButton" type="button">收下啦</button>
+        </div>
+    </div>
+
+    <div class="blessing-modal" id="resultBlessingModal" role="dialog" aria-modal="true" aria-labelledby="resultBlessingTitle">
+        <div class="blessing-card">
+            <h2 id="resultBlessingTitle">星星替我说</h2>
+            <p class="blessing-text" id="resultBlessingText"></p>
+            <button class="close-button" id="closeResultButton" type="button">收下啦</button>
+        </div>
+    </div>
+
+    <script>
+        const BLESSING_MESSAGES = [
+            '喜欢你，是我每天最认真也最开心的小事。',
+            '爱你这件事，我想慢慢说很久很久。',
+            '想你啦，连星星都像在替我眨眼。',
+            '把所有祝福都挂在夜空里，愿宝贝每天都被温柔抱住。',
+            '宝贝，愿你平安喜乐，愿我一直在你身边。',
+            '今天也超级爱你，明天也会更爱你一点点。',
+            '想把夜空的闪光、心里的甜意，都送给你。',
+            '祝福我的宝贝一直开心、一直漂亮、一直被爱。'
+        ];
+
+        const starsField = document.getElementById('starsField');
+        const initialBlessingModal = document.getElementById('initialBlessingModal');
+        const resultBlessingModal = document.getElementById('resultBlessingModal');
+        const resultBlessingText = document.getElementById('resultBlessingText');
+        const closeInitialButton = document.getElementById('closeInitialButton');
+        const closeResultButton = document.getElementById('closeResultButton');
+        const STAR_COUNT = 96;
+        const STAR_SIZE_MIN = 5;
+        const STAR_SIZE_MAX = 10;
+        const TWINKLE_DURATION_MIN = 900;
+        const TWINKLE_DURATION_MAX = 2400;
+        const TWINKLE_DELAY_MAX = 1800;
+        const STAR_COLORS = [
+            { color: '#ffffff', glow: 'rgba(255, 255, 255, 0.86)' },
+            { color: '#fff3b0', glow: 'rgba(255, 220, 112, 0.82)' },
+            { color: '#ffd6f1', glow: 'rgba(255, 159, 243, 0.74)' },
+            { color: '#ffe1be', glow: 'rgba(255, 190, 118, 0.78)' }
+        ];
+        let blessingIndex = 0;
+        let isTransitioning = false;
+
+        function randomBetween(min, max) {
+            return min + Math.random() * (max - min);
+        }
+
+        function createTwinkleStar() {
+            const star = document.createElement('span');
+            const core = document.createElement('span');
+            const halo = document.createElement('span');
+            const crossGlow = document.createElement('span');
+            const trail = document.createElement('span');
+            const pulse = document.createElement('span');
+            const size = randomBetween(STAR_SIZE_MIN, STAR_SIZE_MAX);
+            const scale = randomBetween(0.72, 1.32);
+            const palette = STAR_COLORS[Math.floor(Math.random() * STAR_COLORS.length)];
+
+            star.className = 'twinkle-star';
+            core.className = 'star-core';
+            halo.className = 'star-halo';
+            crossGlow.className = 'star-cross-glow';
+            trail.className = 'star-trail';
+            pulse.className = 'star-pulse';
+            star.style.setProperty('--star-left', Math.random() * 100 + '%');
+            star.style.setProperty('--star-top', Math.random() * 100 + '%');
+            star.style.setProperty('--star-size', `${size}px`);
+            star.style.setProperty('--star-scale', scale);
+            star.style.setProperty('--star-color', palette.color);
+            star.style.setProperty('--star-glow', palette.glow);
+            star.style.setProperty('--twinkle-duration', `${randomBetween(TWINKLE_DURATION_MIN, TWINKLE_DURATION_MAX)}ms`);
+            star.style.setProperty('--twinkle-delay', `${randomBetween(0, TWINKLE_DELAY_MAX)}ms`);
+            star.appendChild(trail);
+            star.appendChild(pulse);
+            star.appendChild(halo);
+            star.appendChild(crossGlow);
+            star.appendChild(core);
+            return star;
+        }
+
+        function createStars() {
+            const fragment = document.createDocumentFragment();
+
+            for (let i = 0; i < STAR_COUNT; i++) {
+                fragment.appendChild(createTwinkleStar());
+            }
+
+            starsField.appendChild(fragment);
+        }
+
+        function openResultBlessingModal() {
+            const message = BLESSING_MESSAGES[blessingIndex % BLESSING_MESSAGES.length];
+            blessingIndex += 1;
+            resultBlessingText.textContent = message;
+            resultBlessingModal.classList.add('active');
+        }
+
+        function moveRandomStarToCenter() {
+            const stars = Array.from(document.querySelectorAll('.twinkle-star'));
+            const selectedStar = stars[Math.floor(Math.random() * stars.length)];
+            const rect = selectedStar.getBoundingClientRect();
+            const starX = rect.left + rect.width / 2;
+            const starY = rect.top + rect.height / 2;
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+            const trailAngle = Math.atan2(centerY - starY, centerX - starX);
+
+            selectedStar.classList.remove('moving-to-center');
+            selectedStar.style.setProperty('--from-left', `${starX}px`);
+            selectedStar.style.setProperty('--from-top', `${starY}px`);
+            selectedStar.style.setProperty('--trail-angle', `${trailAngle}rad`);
+            selectedStar.offsetHeight;
+            selectedStar.classList.add('moving-to-center');
+            selectedStar.addEventListener('animationend', () => {
+                selectedStar.classList.remove('moving-to-center');
+                openResultBlessingModal();
+            }, { once: true });
+        }
+
+        function triggerNextStarBlessing() {
+            moveRandomStarToCenter();
+        }
+
+        function closeCurrentBlessingModal(modal) {
+            if (isTransitioning) {
+                return;
+            }
+
+            isTransitioning = true;
+            modal.classList.add('leaving');
+            modal.addEventListener('transitionend', () => {
+                modal.classList.remove('active', 'leaving');
+                isTransitioning = false;
+                triggerNextStarBlessing();
+            }, { once: true });
+        }
+
+        closeInitialButton.addEventListener('click', () => closeCurrentBlessingModal(initialBlessingModal));
+        closeResultButton.addEventListener('click', () => closeCurrentBlessingModal(resultBlessingModal));
+
+        window.onload = function() {
+            createStars();
+        };
+    </script>
+</body>
+</html>
