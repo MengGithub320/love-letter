@@ -37,35 +37,78 @@
 
         .switch-title {
             position: fixed;
-            top: max(12px, env(safe-area-inset-top));
-            right: 12px;
+            left: 0;
+            top: 28vh;
             z-index: 10;
-            min-height: 40px;
-            padding: 0 14px;
-            border: 1px solid rgba(238, 90, 111, 0.28);
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.88);
-            color: #ee5a6f;
-            font: 800 13px/1.2 -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif;
-            box-shadow: 0 10px 28px rgba(238, 90, 111, 0.26);
-            cursor: pointer;
-            opacity: 0.9;
-            backdrop-filter: blur(8px);
+            display: grid;
+            place-items: center;
+            width: 96px;
+            height: 58px;
+            padding: 0;
+            border: 0;
+            background: transparent;
+            cursor: grab;
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .switch-title::before {
+            content: "";
+            position: absolute;
+            inset: -9px -12px -10px -12px;
+            pointer-events: none;
+            background-image: url('assets/version-switch-branch.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            transform-origin: center;
+        }
+
+        .switch-title[data-edge="left"]::before {
+            transform: rotate(0deg);
+        }
+
+        .switch-title[data-edge="right"]::before {
+            transform: scaleX(-1);
+        }
+
+        .switch-title[data-edge="top"]::before {
+            transform: rotate(90deg);
+        }
+
+        .switch-title[data-edge="bottom"]::before {
+            transform: rotate(-90deg);
+        }
+
+        .switch-title.is-snapping {
+            transition: left 220ms ease, top 220ms ease;
         }
 
         .version-modal {
             position: fixed;
             inset: 0;
             z-index: 20;
-            display: none;
+            display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
             background: rgba(45, 19, 44, 0.42);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 220ms ease, visibility 220ms ease;
         }
 
         .version-modal.show {
-            display: flex;
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .version-modal.is-hiding {
+            opacity: 0;
+            pointer-events: none;
         }
 
         .version-dialog {
@@ -115,7 +158,7 @@
     </style>
 </head>
 <body>
-    <button class="switch-title" id="switch-title" type="button">给你的代码情书</button>
+    <button class="switch-title" id="switch-title" type="button"></button>
     <iframe id="version-frame" title="给你的代码情书"></iframe>
 
     <div class="version-modal" id="version-modal" aria-hidden="true">
@@ -132,15 +175,26 @@
         const versionModal = document.getElementById('version-modal');
         const versionActions = document.getElementById('version-actions');
         const versionClose = document.getElementById('version-close');
-        let titleClickCount = 0;
+        const SWITCH_POSITION_KEY = 'loveLetterVersionSwitchPosition';
+        const SWITCH_MARGIN = 0;
+        const SWITCH_DRAG_THRESHOLD = 6;
+        const SWITCH_DEFAULT_TOP_RATIO = 0.28;
+        const SWITCH_EDGE_ANIMATION_DURATION = 220;
+        const MODAL_FADE_DURATION = 240;
         let allVersions = [];
         let currentVersion = null;
+        let switchDragState = null;
+        let switchPosition = null;
+        let suppressNextSwitchClick = false;
+        let modalCloseTimer = null;
 
         function switchVersion(version) {
             currentVersion = version;
             versionFrame.src = version.file;
             versionFrame.title = version.name;
-            switchTitle.textContent = version.name;
+            switchTitle.textContent = '';
+            switchTitle.title = version.name;
+            switchTitle.setAttribute('aria-label', `切换版本：${version.name}`);
             renderVersionButtons(allVersions);
             closeVersionModal();
         }
@@ -161,19 +215,35 @@
         }
 
         function openVersionModal() {
+            if (modalCloseTimer) {
+                clearTimeout(modalCloseTimer);
+                modalCloseTimer = null;
+            }
+
+            versionModal.classList.remove('is-hiding');
             versionModal.classList.add('show');
             versionModal.setAttribute('aria-hidden', 'false');
-            titleClickCount = 0;
         }
 
         function resetVersionModalState() {
-            titleClickCount = 0;
+            suppressNextSwitchClick = false;
+        }
+
+        function finishVersionModalClose() {
+            versionModal.classList.remove('show', 'is-hiding');
+            versionModal.setAttribute('aria-hidden', 'true');
+            resetVersionModalState();
+            modalCloseTimer = null;
         }
 
         function closeVersionModal() {
-            versionModal.classList.remove('show');
-            versionModal.setAttribute('aria-hidden', 'true');
-            resetVersionModalState();
+            if (!versionModal.classList.contains('show')) {
+                finishVersionModalClose();
+                return;
+            }
+
+            versionModal.classList.add('is-hiding');
+            modalCloseTimer = setTimeout(finishVersionModalClose, MODAL_FADE_DURATION);
         }
 
         function loadRandomVersion(versions) {
@@ -193,6 +263,202 @@
             return versions.find((version) => version.file === requestedFile || version.name === requestedFile) || null;
         }
 
+        function constrainSwitchPosition(left, top) {
+            const rect = switchTitle.getBoundingClientRect();
+            const buttonWidth = rect.width || 96;
+            const buttonHeight = rect.height || 58;
+            const maxLeft = Math.max(SWITCH_MARGIN, window.innerWidth - buttonWidth - SWITCH_MARGIN);
+            const maxTop = Math.max(SWITCH_MARGIN, window.innerHeight - buttonHeight - SWITCH_MARGIN);
+
+            return {
+                left: Math.min(Math.max(left, SWITCH_MARGIN), maxLeft),
+                top: Math.min(Math.max(top, SWITCH_MARGIN), maxTop)
+            };
+        }
+
+        function getSwitchEdgeDirection(position) {
+            const rect = switchTitle.getBoundingClientRect();
+            const buttonWidth = rect.width || 96;
+            const buttonHeight = rect.height || 58;
+            const centerX = position.left + buttonWidth / 2;
+            const centerY = position.top + buttonHeight / 2;
+            const distanceLeft = centerX;
+            const distanceRight = Math.max(0, window.innerWidth - centerX);
+            const distanceTop = centerY;
+            const distanceBottom = Math.max(0, window.innerHeight - centerY);
+            const distances = [
+                ['left', distanceLeft],
+                ['right', distanceRight],
+                ['top', distanceTop],
+                ['bottom', distanceBottom]
+            ];
+
+            return distances.reduce((nearest, next) => (
+                next[1] < nearest[1] ? next : nearest
+            ))[0];
+        }
+
+        function applySwitchDirection(direction) {
+            switchTitle.dataset.edge = direction;
+        }
+
+        function getSwitchEdgePosition(position) {
+            const constrainedPosition = constrainSwitchPosition(position.left, position.top);
+            const rect = switchTitle.getBoundingClientRect();
+            const buttonWidth = rect.width || 96;
+            const buttonHeight = rect.height || 58;
+            const direction = getSwitchEdgeDirection(constrainedPosition);
+
+            switch (direction) {
+                case 'left':
+                    return {
+                        left: SWITCH_MARGIN,
+                        top: constrainedPosition.top
+                    };
+                case 'right':
+                    return {
+                        left: Math.max(SWITCH_MARGIN, window.innerWidth - buttonWidth - SWITCH_MARGIN),
+                        top: constrainedPosition.top
+                    };
+                case 'top':
+                    return {
+                        left: constrainedPosition.left,
+                        top: SWITCH_MARGIN
+                    };
+                case 'bottom':
+                    return {
+                        left: constrainedPosition.left,
+                        top: Math.max(SWITCH_MARGIN, window.innerHeight - buttonHeight - SWITCH_MARGIN)
+                    };
+                default:
+                    return constrainedPosition;
+            }
+        }
+
+        function applySwitchPosition(position) {
+            const nextPosition = constrainSwitchPosition(position.left, position.top);
+            switchPosition = nextPosition;
+            switchTitle.style.left = `${nextPosition.left}px`;
+            switchTitle.style.top = `${nextPosition.top}px`;
+            switchTitle.style.right = 'auto';
+            switchTitle.style.bottom = 'auto';
+            applySwitchDirection(getSwitchEdgeDirection(nextPosition));
+
+            return nextPosition;
+        }
+
+        function saveSwitchPosition(position) {
+            try {
+                localStorage.setItem(SWITCH_POSITION_KEY, JSON.stringify(position));
+            } catch (error) {
+                // Some embedded browsers block storage; dragging should still work for this session.
+            }
+        }
+
+        function getDefaultSwitchPosition() {
+            return getSwitchEdgePosition(constrainSwitchPosition(0, window.innerHeight * SWITCH_DEFAULT_TOP_RATIO));
+        }
+
+        function animateSwitchToEdge(position) {
+            const edgePosition = getSwitchEdgePosition(position);
+
+            switchTitle.classList.add('is-snapping');
+            applySwitchPosition(edgePosition);
+
+            setTimeout(() => {
+                switchTitle.classList.remove('is-snapping');
+                saveSwitchPosition(edgePosition);
+            }, SWITCH_EDGE_ANIMATION_DURATION);
+
+            return edgePosition;
+        }
+
+        function restoreSwitchPosition() {
+            try {
+                const storedPosition = localStorage.getItem(SWITCH_POSITION_KEY);
+
+                if (!storedPosition) {
+                    applySwitchPosition(getDefaultSwitchPosition());
+                    return;
+                }
+
+                const parsedPosition = JSON.parse(storedPosition);
+                const hasValidPosition = Number.isFinite(parsedPosition.left) && Number.isFinite(parsedPosition.top);
+
+                if (hasValidPosition) {
+                    const edgePosition = getSwitchEdgePosition(parsedPosition);
+                    applySwitchPosition(edgePosition);
+                    saveSwitchPosition(edgePosition);
+                } else {
+                    applySwitchPosition(getDefaultSwitchPosition());
+                }
+            } catch (error) {
+                applySwitchPosition(getDefaultSwitchPosition());
+            }
+        }
+
+        function keepSwitchButtonInViewport() {
+            const rect = switchTitle.getBoundingClientRect();
+            const edgePosition = getSwitchEdgePosition(switchPosition || { left: rect.left, top: rect.top });
+
+            applySwitchPosition(edgePosition);
+            saveSwitchPosition(edgePosition);
+        }
+
+        function handleSwitchPointerDown(event) {
+            if (event.button !== undefined && event.button !== 0) {
+                return;
+            }
+
+            const rect = switchTitle.getBoundingClientRect();
+            switchDragState = {
+                pointerId: event.pointerId,
+                startX: event.clientX,
+                startY: event.clientY,
+                startLeft: rect.left,
+                startTop: rect.top,
+                hasMoved: false
+            };
+            suppressNextSwitchClick = false;
+            switchTitle.setPointerCapture(event.pointerId);
+        }
+
+        function handleSwitchPointerMove(event) {
+            if (!switchDragState || switchDragState.pointerId !== event.pointerId) {
+                return;
+            }
+
+            const deltaX = event.clientX - switchDragState.startX;
+            const deltaY = event.clientY - switchDragState.startY;
+
+            if (!switchDragState.hasMoved && Math.hypot(deltaX, deltaY) >= SWITCH_DRAG_THRESHOLD) {
+                switchDragState.hasMoved = true;
+            }
+
+            if (switchDragState.hasMoved) {
+                event.preventDefault();
+                applySwitchPosition({
+                    left: switchDragState.startLeft + deltaX,
+                    top: switchDragState.startTop + deltaY
+                });
+            }
+        }
+
+        function handleSwitchPointerUp(event) {
+            if (!switchDragState || switchDragState.pointerId !== event.pointerId) {
+                return;
+            }
+
+            if (switchDragState.hasMoved) {
+                event.preventDefault();
+                suppressNextSwitchClick = true;
+                animateSwitchToEdge(switchPosition);
+            }
+
+            switchTitle.releasePointerCapture(event.pointerId);
+            switchDragState = null;
+        }
+
         async function initVersions() {
             const response = await fetch('versions.json');
             const versions = await response.json();
@@ -207,11 +473,20 @@
                 loadRandomVersion(versions);
             }
 
-            switchTitle.addEventListener('click', () => {
-                titleClickCount += 1;
-                if (titleClickCount >= 1) {
-                    openVersionModal();
+            restoreSwitchPosition();
+
+            switchTitle.addEventListener('pointerdown', handleSwitchPointerDown);
+            switchTitle.addEventListener('pointermove', handleSwitchPointerMove);
+            switchTitle.addEventListener('pointerup', handleSwitchPointerUp);
+            switchTitle.addEventListener('pointercancel', handleSwitchPointerUp);
+            switchTitle.addEventListener('click', (event) => {
+                if (suppressNextSwitchClick) {
+                    event.preventDefault();
+                    suppressNextSwitchClick = false;
+                    return;
                 }
+
+                openVersionModal();
             });
         }
 
@@ -221,6 +496,7 @@
                 closeVersionModal();
             }
         });
+        window.addEventListener('resize', keepSwitchButtonInViewport);
         initVersions();
     </script>
 </body>
